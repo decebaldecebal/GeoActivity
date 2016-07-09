@@ -4,10 +4,10 @@ import geoactivity.common.GAMod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,23 +49,20 @@ public class CrMContainer extends Container
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting crafting)
-	{
-		super.onCraftGuiOpened(crafting);
-
-		crafting.sendProgressBarUpdate(this, 0, tile_entity.furnaceCookTime);
-		crafting.sendProgressBarUpdate(this, 1, tile_entity.furnaceBurnTime);
-		crafting.sendProgressBarUpdate(this, 2, tile_entity.currentItemBurnTime);
-	}
+    public void addListener(IContainerListener listener)
+    {
+        super.addListener(listener);
+        listener.sendAllWindowProperties(this, this.tile_entity);
+    }
 
 	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
 
-		for (int var1 = 0; var1 < crafters.size(); ++var1)
+		for (int var1 = 0; var1 < listeners.size(); ++var1)
 		{
-			ICrafting var2 = crafters.get(var1);
+			IContainerListener var2 = listeners.get(var1);
 
 			if (lastCookTime != tile_entity.furnaceCookTime)
 				var2.sendProgressBarUpdate(this, 0, tile_entity.furnaceCookTime);

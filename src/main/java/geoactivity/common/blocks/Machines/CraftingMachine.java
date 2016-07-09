@@ -4,7 +4,7 @@ import java.util.Random;
 
 import geoactivity.common.GeoActivity;
 import geoactivity.common.blocks.Machines.CrM.CrMTileE;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -13,18 +13,19 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CraftingMachine extends BaseContainerBlock
 {
 	public CraftingMachine(String name)
 	{
-		super(Material.iron, name, "pickaxe", 2);
+		super(Material.IRON, name, "pickaxe", 2);
 		this.setHardness(3.0F);
 		this.setResistance(15.0F);
-		this.setStepSound(Block.soundTypeStone);
+		this.setSoundType(SoundType.STONE);
 	}
 
 	@Override
@@ -34,8 +35,8 @@ public class CraftingMachine extends BaseContainerBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
-			float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player,
+		EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if(world.isRemote)
 			return true;

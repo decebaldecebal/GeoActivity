@@ -3,6 +3,7 @@ package geoactivity.common.items.ASBLogic;
 import geoactivity.common.GAMod;
 import geoactivity.common.items.tools.Adv.Logic.FuelSlot;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -53,7 +54,7 @@ public class ASBContainer extends Container
 	@Override
 	public void onContainerClosed(EntityPlayer player)
 	{
-		ItemStack itemStack = player.getCurrentEquippedItem();
+		ItemStack itemStack = player.getHeldItemMainhand();
 		super.onContainerClosed(player);
 		if(!itemStack.hasTagCompound())
 			itemStack.setTagCompound(new NBTTagCompound());
@@ -108,18 +109,21 @@ public class ASBContainer extends Container
 	}
 
 	@Override
-	public ItemStack slotClick(int slotID, int buttonPressed, int flag, EntityPlayer player)
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player)
 	{
 		Slot tmpSlot;
-		if(slotID >= 0 && slotID < inventorySlots.size())
-			tmpSlot = inventorySlots.get(slotID);
-		else
+		if(slotId >= 0 && slotId < inventorySlots.size()) {
+			tmpSlot = inventorySlots.get(slotId);
+		}
+		else {
 			tmpSlot = null;
+		}
 
 		if (tmpSlot != null &&
 			player.inventory.getStackInSlot(player.inventory.currentItem) == tmpSlot.getStack()) {
 			return tmpSlot.getStack();
 		}
-		return super.slotClick(slotID, buttonPressed, flag, player);
+
+		return super.slotClick(slotId, dragType, clickTypeIn, player);
 	}
 }

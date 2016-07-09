@@ -15,20 +15,20 @@ import net.minecraftforge.fluids.FluidStack;
 public class CoalRefinerRecipeWrapper implements IRecipeWrapper
 {
 	@Nonnull
-	private final List<List<ItemStack>> inputs;
+	private final List<ItemStack> inputs;
 	@Nonnull
 	private final List<ItemStack> outputs;
 	protected String experienceString;
 
-	public CoalRefinerRecipeWrapper(List<ItemStack> inputs, ItemStack output, float experience)
+	public CoalRefinerRecipeWrapper(ItemStack input, ItemStack output, float experience)
 	{
-		this.inputs = Collections.singletonList(inputs);
+		this.inputs = Collections.singletonList(input);
 		this.outputs = Collections.singletonList(output);
 		this.experienceString = "EXP: " + experience;
 	}
 
 	@Override
-	public List<List<ItemStack>> getInputs()
+	public List<ItemStack> getInputs()
 	{
 		return inputs;
 	}
@@ -50,10 +50,6 @@ public class CoalRefinerRecipeWrapper implements IRecipeWrapper
 	{
 		return null;
 	}
-
-	@Override
-	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight)
-	{}
 
 	@Override
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)

@@ -5,12 +5,12 @@ import java.util.Random;
 import geoactivity.common.GAMod;
 import geoactivity.common.GeoActivity;
 import geoactivity.common.blocks.Machines.CR.CRTileE;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,9 +20,11 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,10 +37,10 @@ public class CoalRefiner extends BaseContainerBlock
 
 	public CoalRefiner(String name)
 	{
-		super(Material.iron, name, "pickaxe", 2);
+		super(Material.IRON, name, "pickaxe", 2);
 		this.setHardness(3.5F);
 		this.setResistance(15.0F);
-		this.setStepSound(Block.soundTypeStone);
+		this.setSoundType(SoundType.STONE);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH)
 			.withProperty(ACTIVE, false).withProperty(KEEPINV, false));
 	}
@@ -56,9 +58,9 @@ public class CoalRefiner extends BaseContainerBlock
 	}
 
 	@Override
-	public Item getItem(World worldIn, BlockPos pos)
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
 	{
-		return Item.getItemFromBlock(GAMod.coalrefiner);
+		return new ItemStack(Item.getItemFromBlock(GAMod.coalrefiner));
 	}
 
 	@Override
@@ -66,11 +68,11 @@ public class CoalRefiner extends BaseContainerBlock
 	{
 		if(!world.isRemote)
 		{
-			Block block = world.getBlockState(pos.north()).getBlock();
-			Block block1 = world.getBlockState(pos.south()).getBlock();
-			Block block2 = world.getBlockState(pos.west()).getBlock();
-			Block block3 = world.getBlockState(pos.east()).getBlock();
-			EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
+			IBlockState block = world.getBlockState(pos.north());
+			IBlockState block1 = world.getBlockState(pos.south());
+			IBlockState block2 = world.getBlockState(pos.west());
+			IBlockState block3 = world.getBlockState(pos.east());
+			EnumFacing enumfacing = state.getValue(FACING);
 
 			if(enumfacing == EnumFacing.NORTH && block.isFullBlock() && !block1.isFullBlock())
 			{
@@ -95,14 +97,14 @@ public class CoalRefiner extends BaseContainerBlock
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void randomDisplayTick(World world, BlockPos pos, IBlockState state, Random rand)
+	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand)
 	{
-		if(((Boolean) state.getValue(ACTIVE)))
+		if((state.getValue(ACTIVE)))
 		{
-			EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
-			double d0 = (double) pos.getX() + 0.5D;
-			double d1 = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
-			double d2 = (double) pos.getZ() + 0.5D;
+			EnumFacing enumfacing = state.getValue(FACING);
+			double d0 = pos.getX() + 0.5D;
+			double d1 = pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
+			double d2 = pos.getZ() + 0.5D;
 			double d3 = 0.52D;
 			double d4 = rand.nextDouble() * 0.6D - 0.3D;
 
@@ -128,8 +130,8 @@ public class CoalRefiner extends BaseContainerBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY,
-		float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player,
+		EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if(world.isRemote)
 			return true;
@@ -200,13 +202,13 @@ public class CoalRefiner extends BaseContainerBlock
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride()
+	public boolean hasComparatorInputOverride(IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, BlockPos pos)
+	public int getComparatorInputOverride(IBlockState blockState, World world, BlockPos pos)
 	{
 		return Container.calcRedstoneFromInventory((IInventory) world.getTileEntity(pos));
 	}
@@ -226,19 +228,19 @@ public class CoalRefiner extends BaseContainerBlock
 	public int getMetaFromState(IBlockState state)
 	{
 		byte b0 = 0;
-		int i = b0 | ((EnumFacing) state.getValue(FACING)).getHorizontalIndex();
+		int i = b0 | state.getValue(FACING).getHorizontalIndex();
 
-		if(((Boolean) state.getValue(KEEPINV)))
+		if((state.getValue(KEEPINV)))
 			i |= 8;
-		if(((Boolean) state.getValue(ACTIVE)))
+		if((state.getValue(ACTIVE)))
 			i |= 4;
 
 		return i;
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[] {FACING, ACTIVE, KEEPINV});
+		return new BlockStateContainer(this, new IProperty[] {FACING, ACTIVE, KEEPINV});
 	}
 }

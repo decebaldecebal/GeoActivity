@@ -20,13 +20,11 @@ import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class AdvancedCoalRefinerRecipeCategory implements IRecipeCategory
+public class AdvancedCoalRefinerRecipeCategory implements IRecipeCategory<AdvancedCoalRefinerRecipeWrapper>
 {
 	@Nonnull
 	protected IDrawable background;
@@ -80,9 +78,8 @@ public class AdvancedCoalRefinerRecipeCategory implements IRecipeCategory
 		arrow.draw(minecraft, 85, 29);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper)
+	public void setRecipe(IRecipeLayout recipeLayout, AdvancedCoalRefinerRecipeWrapper wrapper)
 	{
 		recipeLayout.setRecipeTransferButton(140, 50);
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
@@ -95,26 +92,18 @@ public class AdvancedCoalRefinerRecipeCategory implements IRecipeCategory
 		guiItemStacks.init(5, false, 3, 3);
 		guiItemStacks.init(6, false, 3, 23);
 
-		if (recipeWrapper instanceof AdvancedCoalRefinerRecipeWrapper)
-		{
-			guiItemStacks.set(0, GeneralHelper.getCoalRefinerFuels());
-			guiItemStacks.set(1, recipeWrapper.getInputs());
-			guiItemStacks.set(2, recipeWrapper.getInputs());
-			guiItemStacks.set(3, recipeWrapper.getOutputs());
-			guiItemStacks.set(4, recipeWrapper.getOutputs());
-			guiItemStacks.set(5, PerkHelper.getMachinePerks());
-			guiItemStacks.set(6, PerkHelper.getMachinePerks());
-		}
-		else
-		{
-			System.out.println("RecipeWrapper is not a known crafting wrapper type: " + recipeWrapper.toString());
-		}
+		guiItemStacks.set(0, GeneralHelper.getCoalRefinerFuels());
+		guiItemStacks.set(1, wrapper.getInputs());
+		guiItemStacks.set(2, wrapper.getInputs());
+		guiItemStacks.set(3, wrapper.getOutputs());
+		guiItemStacks.set(4, wrapper.getOutputs());
+		guiItemStacks.set(5, PerkHelper.getMachinePerks());
+		guiItemStacks.set(6, PerkHelper.getMachinePerks());
 	}
 
 	@Nonnull
 	public static List<AdvancedCoalRefinerRecipeWrapper> getAdvancedCoalRefinerRecipes(IJeiHelpers helpers)
 	{
-		IStackHelper stackHelper = helpers.getStackHelper();
 		Map<ItemStack, ItemStack> smeltingMap = CRRecipes.getInstance().getSmeltingList();
 
 		List<AdvancedCoalRefinerRecipeWrapper> recipes = new ArrayList<AdvancedCoalRefinerRecipeWrapper>();
@@ -126,8 +115,7 @@ public class AdvancedCoalRefinerRecipeCategory implements IRecipeCategory
 
 			float experience = CRRecipes.getInstance().getExperience(output);
 
-			List<ItemStack> inputs = stackHelper.getSubtypes(input);
-			AdvancedCoalRefinerRecipeWrapper recipe = new AdvancedCoalRefinerRecipeWrapper(inputs, output, experience);
+			AdvancedCoalRefinerRecipeWrapper recipe = new AdvancedCoalRefinerRecipeWrapper(input, output, experience);
 			recipes.add(recipe);
 		}
 

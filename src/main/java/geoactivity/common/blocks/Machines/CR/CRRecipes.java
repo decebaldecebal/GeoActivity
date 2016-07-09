@@ -27,12 +27,12 @@ public class CRRecipes
 
 	public CRRecipes()
 	{
-		this.addSmelting(Items.coal, new ItemStack(GAMod.graphite), 0.2F);
+		this.addSmelting(Items.COAL, new ItemStack(GAMod.graphite), 0.2F);
 		this.addSmelting(GAMod.gemLigniteCoal, new ItemStack(GAMod.graphite, 8), 0.2F);
 		this.addSmelting(GAMod.gemBituminousCoal, new ItemStack(GAMod.graphite, 16), 0.2F);
 		this.addSmelting(GAMod.gemAnthraciteCoal, new ItemStack(GAMod.graphite, 24), 0.2F);
 
-		this.addSmelting(Blocks.coal_ore, new ItemStack(GAMod.graphite, 4), 0.2F);
+		this.addSmelting(Blocks.COAL_ORE, new ItemStack(GAMod.graphite, 4), 0.2F);
 		this.addSmelting(GAMod.oreLignite, new ItemStack(GAMod.gemLigniteCoal, 2), 0.3F);
 		this.addSmelting(GAMod.oreBituminous, new ItemStack(GAMod.gemBituminousCoal, 2), 0.4F);
 		this.addSmelting(GAMod.oreAnthracite, new ItemStack(GAMod.gemAnthraciteCoal, 2), 0.5F);

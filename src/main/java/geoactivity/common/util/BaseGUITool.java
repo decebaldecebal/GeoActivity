@@ -6,6 +6,7 @@ import java.util.Random;
 import geoactivity.common.GeoActivity;
 import geoactivity.common.lib.IHasName;
 import geoactivity.common.lib.IOpenableGUI;
+import geoactivity.common.lib.Reference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -17,7 +18,7 @@ public abstract class BaseGUITool extends ItemTool implements IHasName, IOpenabl
 
 	public BaseGUITool(String name, ToolMaterial material)
 	{
-		super(0, material, null);
+		super(0, -1.0f, material, null);
 
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(false);
@@ -25,7 +26,7 @@ public abstract class BaseGUITool extends ItemTool implements IHasName, IOpenabl
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);
-		GameRegistry.registerItem(this, name);
+		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 	}
 
 	@Override

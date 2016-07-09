@@ -22,7 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class CrMRecipeCategory implements IRecipeCategory
+public class CrMRecipeCategory implements IRecipeCategory<IRecipeWrapper>
 {
 	@Nonnull
 	private final IDrawable background;

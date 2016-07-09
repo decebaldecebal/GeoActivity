@@ -8,9 +8,9 @@ import geoactivity.common.blocks.HardenedBrick;
 import geoactivity.common.blocks.HardenedBrick.EnumHardenedBrick;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 
 public class TGTileE extends TileEntity implements ITickable, IEnergyProvider
 {
@@ -29,12 +29,14 @@ public class TGTileE extends TileEntity implements ITickable, IEnergyProvider
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 
 		buffer.writeToNBT(tag);
 		tag.setByte("bricks", bricks);
+
+		return tag;
 	}
 
 	@Override

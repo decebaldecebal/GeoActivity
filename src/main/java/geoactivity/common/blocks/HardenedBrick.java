@@ -2,13 +2,12 @@ package geoactivity.common.blocks;
 
 import java.util.List;
 
-import geoactivity.common.itemblocks.BrickItemBlock;
 import geoactivity.common.util.GeneralHelper;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -21,11 +20,11 @@ public class HardenedBrick extends BaseBlock
 
 	public HardenedBrick(String name)
 	{
-		super(Material.rock, "pickaxe", 3, BrickItemBlock.class, GeneralHelper.appendStringToArray(
+		super(Material.ROCK, "pickaxe", 3, GeneralHelper.appendStringToArray(
 				GeneralHelper.getEnumStrings(EnumHardenedBrick.class), name + "_"));
 		this.setHardness(20.0F);
 		this.setResistance(150.0F);
-		this.setStepSound(Block.soundTypeStone);
+		this.setSoundType(SoundType.STONE);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, EnumHardenedBrick.NORMAL));
 	}
 
@@ -63,9 +62,9 @@ public class HardenedBrick extends BaseBlock
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[] {TYPE});
+		return new BlockStateContainer(this, new IProperty[] {TYPE});
 	}
 
 	public static enum EnumHardenedBrick implements IStringSerializable

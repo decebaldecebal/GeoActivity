@@ -2,6 +2,7 @@ package geoactivity.common.items;
 
 import geoactivity.common.GeoActivity;
 import geoactivity.common.lib.IHasName;
+import geoactivity.common.lib.Reference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -16,7 +17,7 @@ public class BaseItem extends Item implements IHasName
 		this.setUnlocalizedName(name[0]);
 		this.setMaxStackSize(64);
 		this.setCreativeTab(GeoActivity.tabMain);
-		GameRegistry.registerItem(this, name[0]);
+		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name[0]));
 	}
 
 	@Override

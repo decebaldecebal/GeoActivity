@@ -80,7 +80,7 @@ public class CrMTileE extends BaseTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
 
@@ -111,6 +111,8 @@ public class CrMTileE extends BaseTileEntity
 			}
 		}
 		tagCompound.setTag("Inventory", itemList);
+
+		return tagCompound;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -356,7 +358,7 @@ public class CrMTileE extends BaseTileEntity
 		{
 			Item var1 = par0ItemStack.getItem();
 
-			if(var1 == Item.getItemFromBlock(Blocks.coal_block))
+			if(var1 == Item.getItemFromBlock(Blocks.COAL_BLOCK))
 				return 82;
 			if (var1 == GAMod.gemLigniteCoal)
 				return 164;

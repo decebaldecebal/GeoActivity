@@ -12,6 +12,7 @@ import geoactivity.common.items.tools.Adv.Logic.AdvTGUI;
 import geoactivity.common.items.tools.Adv.Logic.AdvTInventory;
 import geoactivity.common.lib.IHasName;
 import geoactivity.common.lib.IOpenableGUI;
+import geoactivity.common.lib.Reference;
 import geoactivity.common.lib.ToolsHelper;
 import geoactivity.common.util.BaseRedstoneTool;
 import geoactivity.common.util.GeneralHelper;
@@ -19,10 +20,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -37,7 +42,7 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);
-		GameRegistry.registerItem(this, name);
+		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 	}
 
 	@Override
@@ -141,7 +146,7 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
 	{
 		if(!world.isRemote)
 			if(player.isSneaking())
@@ -152,12 +157,12 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 				AdvTInventory inv = new AdvTInventory(player.inventory.getCurrentItem(), player);
 				inv.setCharge();
 			}
-		player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
-		return stack;
+		player.setActiveHand(hand);
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
 	}
 
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
 	{
 		return HashMultimap.create();
 	}
@@ -165,14 +170,14 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		AdvTInventory inv = new AdvTInventory(player.getHeldItem(), player);
+		AdvTInventory inv = new AdvTInventory(player.getHeldItemMainhand(), player);
 		return new AdvTGUI(inv, player);
 	}
 
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		AdvTInventory inv = new AdvTInventory(player.getHeldItem(), player);
+		AdvTInventory inv = new AdvTInventory(player.getHeldItemMainhand(), player);
 		return new AdvTContainer(inv, player);
 	}
 }

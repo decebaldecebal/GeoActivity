@@ -1,3 +1,13 @@
+Version 2.3.1:
+Changes:
+- BETA VERSION, except minor bugs
+- update to MC 1.9.4 and Forge 1.9.4-12.17.0.1976
+
+Version 2.3:
+Changes:
+- ALPHA VERSION, expect bugs
+- updated to MC 1.9 and Forge 1.9-12.16.0.1865
+
 Version 2.2.3:
 Fixes:
 - fixed crash on client side

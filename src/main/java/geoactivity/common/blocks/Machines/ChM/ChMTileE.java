@@ -12,9 +12,9 @@ import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ChMTileE extends BaseTileEntity
@@ -57,7 +57,7 @@ public class ChMTileE extends BaseTileEntity
 
 	private List<EntityItemFrame> verifyItem(ItemStack item, List<EntityItemFrame> lastEntity)
 	{
-		List<EntityItemFrame> entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, AxisAlignedBB.fromBounds(pos.getX() - 1.3,
+		List<EntityItemFrame> entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, new AxisAlignedBB(pos.getX() - 1.3,
 						pos.getY() - 1, pos.getZ() - 1.3, pos.getX() + 0.3, pos.getY() + 1, pos.getZ() + 0.3));
 		if(!entity.isEmpty() && entity.size() < 5 && !entity.equals(lastEntity))
 		{
@@ -65,7 +65,7 @@ public class ChMTileE extends BaseTileEntity
 				return entity;
 		}
 
-		entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, AxisAlignedBB.fromBounds(pos.getX() + 0.7,
+		entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, new AxisAlignedBB(pos.getX() + 0.7,
 						pos.getY() - 1, pos.getZ() - 1.3, pos.getX() + 2.3, pos.getY() + 1, pos.getZ() + 0.3));
 		if(!entity.isEmpty() && entity.size() < 5 && !entity.equals(lastEntity))
 		{
@@ -73,7 +73,7 @@ public class ChMTileE extends BaseTileEntity
 				return entity;
 		}
 
-		entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, AxisAlignedBB.fromBounds(pos.getX() + 0.7,
+		entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, new AxisAlignedBB(pos.getX() + 0.7,
 						pos.getY() - 1, pos.getZ() + 0.7, pos.getX() + 2.3, pos.getY() + 1, pos.getZ() + 2.3));
 		if(!entity.isEmpty() && entity.size() < 5 && !entity.equals(lastEntity))
 		{
@@ -81,7 +81,7 @@ public class ChMTileE extends BaseTileEntity
 				return entity;
 		}
 
-		entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, AxisAlignedBB.fromBounds(pos.getX() - 1.3,
+		entity = worldObj.getEntitiesWithinAABB(EntityItemFrame.class, new AxisAlignedBB(pos.getX() - 1.3,
 						pos.getY() - 1, pos.getZ() + 0.7, pos.getX() + 0.3, pos.getY() + 1, pos.getZ() + 2.3));
 		if(!entity.isEmpty() && entity.size() < 5 && !entity.equals(lastEntity))
 		{
@@ -94,13 +94,13 @@ public class ChMTileE extends BaseTileEntity
 
 	public void craftRecipe()
 	{
-		if(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock() == Blocks.coal_block && checkNeighbors())
+		if(worldObj.getBlockState(pos.add(0, 1, 0)).getBlock() == Blocks.COAL_BLOCK && checkNeighbors())
 		{
-			ItemStack inv1 = new ItemStack(Blocks.air);
+			ItemStack inv1 = new ItemStack(Blocks.AIR);
 			if(inventory[0] != null)
 				inv1 = inventory[0].copy();
 
-			ItemStack inv2 = new ItemStack(Blocks.air);
+			ItemStack inv2 = new ItemStack(Blocks.AIR);
 			if(inventory[1] != null)
 				inv2 = inventory[1].copy();
 

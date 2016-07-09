@@ -3,6 +3,7 @@ package geoactivity.common.items.tools.RMLogic;
 import geoactivity.common.GAMod;
 import geoactivity.common.items.tools.Adv.Logic.FuelSlot;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -39,7 +40,7 @@ public class RMContainer extends Container
 	@Override
 	public void onContainerClosed(EntityPlayer player)
 	{
-		ItemStack itemStack = player.getCurrentEquippedItem();
+		ItemStack itemStack = player.getHeldItemMainhand();
 		super.onContainerClosed(player);
 		if(!itemStack.hasTagCompound())
 			itemStack.setTagCompound(new NBTTagCompound());
@@ -93,7 +94,7 @@ public class RMContainer extends Container
 	}
 
 	@Override
-	public ItemStack slotClick(int slotID, int buttonPressed, int flag, EntityPlayer player)
+	public ItemStack slotClick(int slotID, int buttonPressed, ClickType click, EntityPlayer player)
 	{
 
 		Slot tmpSlot;
@@ -107,6 +108,6 @@ public class RMContainer extends Container
 			return tmpSlot.getStack();
 		}
 
-		return super.slotClick(slotID, buttonPressed, flag, player);
+		return super.slotClick(slotID, buttonPressed, click, player);
 	}
 }

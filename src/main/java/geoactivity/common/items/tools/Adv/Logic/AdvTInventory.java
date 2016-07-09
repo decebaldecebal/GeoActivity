@@ -1,12 +1,12 @@
 package geoactivity.common.items.tools.Adv.Logic;
 
+import geoactivity.common.GAMod;
+import geoactivity.common.items.ToolPerks.EnumToolPerks;
+import geoactivity.common.util.BaseInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import geoactivity.common.GAMod;
-import geoactivity.common.items.ToolPerks.EnumToolPerks;
-import geoactivity.common.util.BaseInventory;
 
 public class AdvTInventory extends BaseInventory
 {
@@ -58,6 +58,7 @@ public class AdvTInventory extends BaseInventory
 		writeToNBT(current.getTagCompound());
 	}
 
+	@Override
 	public void readFromNBT(NBTTagCompound myCompound)
 	{
 		super.readFromNBT(myCompound);

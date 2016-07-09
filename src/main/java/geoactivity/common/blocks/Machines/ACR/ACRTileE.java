@@ -13,8 +13,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
@@ -51,7 +51,7 @@ public class ACRTileE extends BaseTileEntity
 			else
 			{
 				int neighbors2[][] = checkNeighbors(neighbors[1][0], neighbors[0][1], neighbors[2][2]);
-				
+
 				if(neighbors2[3][0] != 0 && neighbors2[3][1] != 0 && neighbors2[3][2] != 0)
 					return ;
 				else if(neighbors2[2][0] != 0 && neighbors2[2][1] != 0 && neighbors2[2][2] != 0)
@@ -112,10 +112,10 @@ public class ACRTileE extends BaseTileEntity
 			ACRTileE coretile = getCore();
 			tneighbors = coretile.tneighbors;
 			tneighbors2 = coretile.tneighbors2;
-			
+
 			for(int i = 0;i < coretile.getSizeInventory();i++)
 				coretile.inventory[i] = null;
-			
+
 			coretile.furnaceBurnTime = 0;
 			coretile.currentItemBurnTime = 0;
 			coretile.furnaceCookTime = 0;
@@ -166,7 +166,7 @@ public class ACRTileE extends BaseTileEntity
 		int a[][] = new int[6][3];
 		int i = 0;
 		Block block = GAMod.advancedcoalrefiner;
-		
+
 		if(worldObj.getBlockState(new BlockPos(x, y + 1, z)).getBlock() == block)
 		{
 			a[i][0] = x;
@@ -283,30 +283,30 @@ public class ACRTileE extends BaseTileEntity
 			corePos = new BlockPos(tagCompound.getInteger("CoreX"), tagCompound.getInteger("CoreY"), tagCompound.getInteger("CoreZ"));
 		else
 			corePos = null;
-		
+
 		if (this.isCore)
 		{
 			furnaceBurnTime = tagCompound.getShort("BurnTime");
 			furnaceCookTime = tagCompound.getShort("CookTime");
 			currentItemBurnTime = tagCompound.getShort("ItemBurnTime");
-			
+
 			perkEff = tagCompound.getByte("perkeff");
 			perkSpeed = tagCompound.getByte("perkspeed");
-	
+
 			NBTTagList temp = tagCompound.getTagList("tempneighbors", Constants.NBT.TAG_COMPOUND);
 			int[][] tlist = new int[6][3];
 			for(int i = 0;i < temp.tagCount();i++)
 			{
-				NBTTagCompound tag = (NBTTagCompound) temp.getCompoundTagAt(i);
+				NBTTagCompound tag = temp.getCompoundTagAt(i);
 				tlist[i] = tag.getIntArray("temp");
 			}
 			tneighbors = tlist;
-			
+
 			temp = tagCompound.getTagList("tempneighbors2", Constants.NBT.TAG_COMPOUND);
 			int[][] tlist1 = new int[6][3];
 			for(int i = 0;i < temp.tagCount();i++)
 			{
-				NBTTagCompound tag1 = (NBTTagCompound) temp.getCompoundTagAt(i);
+				NBTTagCompound tag1 = temp.getCompoundTagAt(i);
 				tlist1[i] = tag1.getIntArray("temp");
 			}
 			tneighbors2 = tlist1;
@@ -314,7 +314,7 @@ public class ACRTileE extends BaseTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
 
@@ -325,17 +325,17 @@ public class ACRTileE extends BaseTileEntity
 			tagCompound.setInteger("CoreX", corePos.getX());
 			tagCompound.setInteger("CoreY", corePos.getY());
 			tagCompound.setInteger("CoreZ", corePos.getZ());
-		}		
-		
+		}
+
 		if (this.isCore)
-		{			
+		{
 			tagCompound.setShort("BurnTime", (short) furnaceBurnTime);
 			tagCompound.setShort("CookTime", (short) furnaceCookTime);
 			tagCompound.setShort("ItemBurnTime", (short) currentItemBurnTime);
-						
+
 			tagCompound.setByte("perkeff", perkEff);
 			tagCompound.setByte("perkspeed", perkSpeed);
-	
+
 			if(tneighbors != null)
 			{
 				NBTTagList temp = new NBTTagList();
@@ -347,7 +347,7 @@ public class ACRTileE extends BaseTileEntity
 				}
 				tagCompound.setTag("tempneighbors", temp);
 			}
-	
+
 			if(tneighbors2 != null)
 			{
 				NBTTagList temp1 = new NBTTagList();
@@ -360,6 +360,8 @@ public class ACRTileE extends BaseTileEntity
 				tagCompound.setTag("tempneighbors2", temp1);
 			}
 		}
+
+		return tagCompound;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -379,7 +381,7 @@ public class ACRTileE extends BaseTileEntity
 			currentItemBurnTime = (int) (200 * basetime);
 		}
 
-		return (int) (furnaceBurnTime * par1 / currentItemBurnTime);
+		return furnaceBurnTime * par1 / currentItemBurnTime;
 	}
 
 	public boolean isBurning()
@@ -419,36 +421,36 @@ public class ACRTileE extends BaseTileEntity
 		{
 			boolean var1 = furnaceBurnTime > 0;
 			boolean var2 = false;
-			
+
 			if(furnaceBurnTime > 0)
 				--furnaceBurnTime;
-	
+
 			if(!worldObj.isRemote)
 			{
 				if(furnaceBurnTime == 0 && this.canSmelt())
 				{
 					checkPerks();
 					currentItemBurnTime = furnaceBurnTime = getItemBurnTime(inventory[0]);
-	
+
 					if(furnaceBurnTime > 0)
 					{
 						var2 = true;
-	
+
 						if(inventory[0] != null)
 						{
 							--inventory[0].stackSize;
-	
+
 							if(inventory[0].stackSize == 0)
 								inventory[0] = inventory[0].getItem().getContainerItem(inventory[0]);
 						}
 					}
 				}
-	
+
 				if(this.isBurning() && this.canSmelt())
 				{
 					++furnaceCookTime;
 					double basetime = 1.0 - (0.25 * perkSpeed);
-	
+
 					if(furnaceCookTime >= 200 * basetime)
 					{
 						furnaceCookTime = 0;
@@ -458,13 +460,13 @@ public class ACRTileE extends BaseTileEntity
 				}
 				else
 					furnaceCookTime = 0;
-	
+
 				if(var1 != furnaceBurnTime > 0)
 				{
 					var2 = true;
 				}
 			}
-	
+
 			if(var2)
 				this.markDirty();
 		}
@@ -561,7 +563,7 @@ public class ACRTileE extends BaseTileEntity
 			double basefuel = 1.0 + (0.5 * perkEff);
 			double basetime = 1.0 - (0.25 * perkSpeed);
 
-			if(item == Items.coal)
+			if(item == Items.COAL)
 				return (int) (200 * basetime * basefuel); // fuel times
 			if(item == GAMod.gemLigniteCoal)
 				return (int) (1600 * basetime * basefuel);
@@ -577,13 +579,13 @@ public class ACRTileE extends BaseTileEntity
 	{
 		return getItemBurnTime(stack) > 0;
 	}
-	
+
 	@Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
     {
         return oldState.getBlock() != newState.getBlock();
     }
-	
+
 	@Override
 	public String getName()
 	{

@@ -3,7 +3,7 @@ package geoactivity.common.blocks.Machines.TC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,13 +11,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TCContainer extends Container
 {
-	protected TCTileE tile;
+	protected TCTileE tile_entity;
 
 	private int lastEnergy = 0;
 
 	public TCContainer(TCTileE tile, InventoryPlayer playerInv)
 	{
-		this.tile = tile;
+		tile_entity = tile;
 
 		this.addSlotToContainer(new ToolSlot(tile, 0, 80, 35));
 
@@ -32,27 +32,26 @@ public class TCContainer extends Container
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting crafting)
-	{
-		super.onCraftGuiOpened(crafting);
-
-		crafting.sendProgressBarUpdate(this, 0, tile.buffer.getEnergyStored());
-	}
+    public void addListener(IContainerListener listener)
+    {
+        super.addListener(listener);
+        listener.sendAllWindowProperties(this, this.tile_entity);
+    }
 
 	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
 
-		for (int var1 = 0; var1 < crafters.size(); ++var1)
+		for (int var1 = 0; var1 < listeners.size(); ++var1)
 		{
-			ICrafting var2 = crafters.get(var1);
+			IContainerListener var2 = listeners.get(var1);
 
-			if (lastEnergy != tile.buffer.getEnergyStored())
-				var2.sendProgressBarUpdate(this, 0, tile.buffer.getEnergyStored());
+			if (lastEnergy != tile_entity.buffer.getEnergyStored())
+				var2.sendProgressBarUpdate(this, 0, tile_entity.buffer.getEnergyStored());
 		}
 
-		lastEnergy = tile.buffer.getEnergyStored();
+		lastEnergy = tile_entity.buffer.getEnergyStored();
 	}
 
 	@Override
@@ -60,13 +59,13 @@ public class TCContainer extends Container
 	public void updateProgressBar(int par1, int par2)
 	{
 		if(par1 == 0)
-			tile.buffer.setEnergyStored(par2);
+			tile_entity.buffer.setEnergyStored(par2);
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return tile.isUseableByPlayer(player);
+		return tile_entity.isUseableByPlayer(player);
 	}
 
 	@Override

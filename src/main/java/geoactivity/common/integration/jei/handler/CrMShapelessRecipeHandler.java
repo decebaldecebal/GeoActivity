@@ -46,4 +46,10 @@ public class CrMShapelessRecipeHandler implements IRecipeHandler<CrMShapelessRec
 
 		return inputCount > 0;
 	}
+
+	@Override
+	public String getRecipeCategoryUid(CrMShapelessRecipe recipe)
+	{
+		return GeoActivityRecipeCategoryUid.CRAFTING_MACHINE;
+	}
 }

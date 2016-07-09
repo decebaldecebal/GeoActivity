@@ -6,25 +6,25 @@ import geoactivity.common.GAMod;
 import geoactivity.common.GeoActivity;
 import geoactivity.common.blocks.HardenedBrick.EnumHardenedBrick;
 import geoactivity.common.blocks.Machines.AOR.AORTileE;
-import geoactivity.common.itemblocks.MultiItemBlock;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class AdvancedOreRefiner extends BaseContainerBlock
@@ -35,10 +35,10 @@ public class AdvancedOreRefiner extends BaseContainerBlock
 
 	public AdvancedOreRefiner(String name)
 	{
-		super(Material.iron, name, "pickaxe", 3, MultiItemBlock.class);
+		super(Material.IRON, name, "pickaxe", 3);
 		this.setHardness(20.0F);
 		this.setResistance(20.0F);
-		this.setStepSound(Block.soundTypeStone);
+		this.setSoundType(SoundType.STONE);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH)
 				.withProperty(FORMED, false).withProperty(CORE, true));
 	}
@@ -56,21 +56,21 @@ public class AdvancedOreRefiner extends BaseContainerBlock
 	}
 
 	@Override
-	public Item getItem(World worldIn, BlockPos pos)
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
 	{
-		return Item.getItemFromBlock(GAMod.advancedorerefiner);
+		return new ItemStack(Item.getItemFromBlock(GAMod.advancedorerefiner));
 	}
 
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
-		if(!world.isRemote && ((Boolean)state.getValue(CORE)))
+		if(!world.isRemote && (state.getValue(CORE)))
 		{
-			Block block = world.getBlockState(pos.north()).getBlock();
-			Block block1 = world.getBlockState(pos.south()).getBlock();
-			Block block2 = world.getBlockState(pos.west()).getBlock();
-			Block block3 = world.getBlockState(pos.east()).getBlock();
-			EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
+			IBlockState block = world.getBlockState(pos.north());
+			IBlockState block1 = world.getBlockState(pos.south());
+			IBlockState block2 = world.getBlockState(pos.west());
+			IBlockState block3 = world.getBlockState(pos.east());
+			EnumFacing enumfacing = state.getValue(FACING);
 
 			if(enumfacing == EnumFacing.NORTH && block.isFullBlock() && !block1.isFullBlock())
 			{
@@ -94,8 +94,8 @@ public class AdvancedOreRefiner extends BaseContainerBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
-			float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player,
+		EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if(world.isRemote)
 			return true;
@@ -189,20 +189,20 @@ public class AdvancedOreRefiner extends BaseContainerBlock
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride()
+	public boolean hasComparatorInputOverride(IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, BlockPos pos)
+	public int getComparatorInputOverride(IBlockState blockState, World world, BlockPos pos)
 	{
 		AORTileE tile_entity = (AORTileE) world.getTileEntity(pos);
 
 		if(tile_entity != null)
 		{
 			AORTileE core = tile_entity.getCore();
-			return Container.calcRedstoneFromInventory((IInventory) core);
+			return Container.calcRedstoneFromInventory(core);
 		}
 		return 0;
 	}
@@ -223,19 +223,19 @@ public class AdvancedOreRefiner extends BaseContainerBlock
 	public int getMetaFromState(IBlockState state)
 	{
 		byte b0 = 0;
-		int i = b0 | ((EnumFacing) state.getValue(FACING)).getHorizontalIndex();
+		int i = b0 | state.getValue(FACING).getHorizontalIndex();
 
-		if(((Boolean) state.getValue(FORMED)))
+		if((state.getValue(FORMED)))
 			i |= 4;
-		if(((Boolean) state.getValue(CORE)))
+		if((state.getValue(CORE)))
 			i |= 8;
 
 		return i;
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected BlockStateContainer createBlockState()
 	{
-		return new BlockState(this, new IProperty[] {FACING, FORMED, CORE});
+		return new BlockStateContainer(this, new IProperty[] {FACING, FORMED, CORE});
 	}
 }

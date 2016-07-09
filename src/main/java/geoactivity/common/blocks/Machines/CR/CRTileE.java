@@ -29,7 +29,7 @@ public class CRTileE extends BaseTileEntity
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		
+
 		furnaceBurnTime = tag.getShort("BurnTime");
 		furnaceCookTime = tag.getShort("CookTime");
 		currentItemBurnTime = tag.getShort("ItemBurnTime");
@@ -37,13 +37,15 @@ public class CRTileE extends BaseTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		
+
 		tag.setShort("BurnTime", (short) furnaceBurnTime);
 		tag.setShort("CookTime", (short) furnaceCookTime);
 		tag.setShort("ItemBurnTime", (short) currentItemBurnTime);
+
+		return tag;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -164,7 +166,7 @@ public class CRTileE extends BaseTileEntity
 		{
 			Item var1 = stack.getItem();
 
-			if (var1 == Items.coal)
+			if (var1 == Items.COAL)
 				return 400; // fuel times
 			if (var1 == GAMod.gemLigniteCoal)
 				return 3200;
@@ -175,13 +177,13 @@ public class CRTileE extends BaseTileEntity
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public String getName()
 	{
 		return "CoalRefiner";
 	}
-	
+
 	@Override
 	public int[] getSlotsForFace(EnumFacing side)
 	{
@@ -193,10 +195,10 @@ public class CRTileE extends BaseTileEntity
 	{
 		if (CRRecipes.getInstance().getSmeltingResult(stack) != null && index == 0)
 			return true;
-		
+
 		if (FuelSlot.isFuel(stack) && index == 1)
 			return true;
-		
+
 		return false;
 	}
 

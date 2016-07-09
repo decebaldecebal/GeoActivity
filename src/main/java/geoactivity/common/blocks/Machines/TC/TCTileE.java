@@ -1,5 +1,9 @@
 package geoactivity.common.blocks.Machines.TC;
 
+import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyContainerItem;
+import cofh.api.energy.IEnergyReceiver;
+import geoactivity.common.util.BaseTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -7,44 +11,42 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.IEnergyReceiver;
-import geoactivity.common.util.BaseTileEntity;
 
 public class TCTileE extends BaseTileEntity implements IEnergyReceiver
 {
 	public static int internalStorage = 10000000;
-	
+
 	public EnergyStorage buffer = new EnergyStorage(internalStorage, 20000);
-	
+
 	public TCTileE()
 	{
 		super(1);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		
+
 		buffer.readFromNBT(tag);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		
+
 		buffer.writeToNBT(tag);
+
+		return tag;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public int getEnergyScaled(int par1)
 	{
 		return buffer.getEnergyStored() / 10000 / par1;
 	}
-	
+
 	@Override
 	public void update()
 	{
@@ -83,15 +85,15 @@ public class TCTileE extends BaseTileEntity implements IEnergyReceiver
 	{
 		return buffer.getMaxEnergyStored();
 	}
-	
+
 	@Override
-	public String getName() 
+	public String getName()
 	{
 		return "ToolCharger";
 	}
-	
+
 	@Override
-	public boolean isItemValidForSlot(int var1, ItemStack var2) 
+	public boolean isItemValidForSlot(int var1, ItemStack var2)
 	{
 		return ToolSlot.isRFTool(var2);
 	}
@@ -107,12 +109,12 @@ public class TCTileE extends BaseTileEntity implements IEnergyReceiver
 	{
 		if(ToolSlot.isRFTool(stack))
 			return true;
-		
+
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) 
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
 	{
 		return true;
 	}

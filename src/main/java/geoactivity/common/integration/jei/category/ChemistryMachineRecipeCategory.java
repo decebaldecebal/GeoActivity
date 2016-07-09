@@ -16,12 +16,11 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class ChemistryMachineRecipeCategory implements IRecipeCategory
+public class ChemistryMachineRecipeCategory implements IRecipeCategory<ChemistryMachineRecipeWrapper>
 {
 	@Nonnull
 	private final IDrawable background;
@@ -63,7 +62,7 @@ public class ChemistryMachineRecipeCategory implements IRecipeCategory
 	{}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper)
+	public void setRecipe(IRecipeLayout recipeLayout, ChemistryMachineRecipeWrapper wrapper)
 	{
 		recipeLayout.setRecipeTransferButton(140, 24);
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
@@ -76,27 +75,18 @@ public class ChemistryMachineRecipeCategory implements IRecipeCategory
 		guiItemStacks.init(5, false, 116, 40);
 		guiItemStacks.init(6, false, 69, 20);
 
-		if (recipeWrapper instanceof ChemistryMachineRecipeWrapper)
-		{
-			ChemistryMachineRecipeWrapper wrapper = (ChemistryMachineRecipeWrapper) recipeWrapper;
+		ItemStack[] inputs = wrapper.getInputStacks();
+		ItemStack[] outputs = wrapper.getOutputStacks();
 
-			ItemStack[] inputs = wrapper.getInputStacks();
-			ItemStack[] outputs = wrapper.getOutputStacks();
+		guiItemStacks.set(0, inputs[0]);
+		guiItemStacks.set(1, inputs[1]);
 
-			guiItemStacks.set(0, inputs[0]);
-			guiItemStacks.set(1, inputs[1]);
+		guiItemStacks.set(2, outputs[1]);
+		guiItemStacks.set(3, outputs[2]);
+		guiItemStacks.set(4, outputs[3]);
+		guiItemStacks.set(5, outputs[4]);
 
-			guiItemStacks.set(2, outputs[1]);
-			guiItemStacks.set(3, outputs[2]);
-			guiItemStacks.set(4, outputs[3]);
-			guiItemStacks.set(5, outputs[4]);
-
-			guiItemStacks.set(6, outputs[0]);
-		}
-		else
-		{
-			System.out.println("RecipeWrapper is not a known crafting wrapper type: " + recipeWrapper.toString());
-		}
+		guiItemStacks.set(6, outputs[0]);
 	}
 
 	@Nonnull

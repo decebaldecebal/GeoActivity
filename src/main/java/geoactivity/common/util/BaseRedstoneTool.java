@@ -12,12 +12,17 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class BaseRedstoneTool extends BaseGUITool
@@ -156,10 +161,11 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 
 				if(stack.getTagCompound().getBoolean("nodrops"))
 				{
-					this.onBlockDestroyed(stack, world, block, pos, player);
+					this.onBlockDestroyed(stack, world, state, pos, player);
 					world.setBlockToAir(pos);
-					world.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-						"random.break", 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+					world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+						SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 1.0f,
+						world.rand.nextFloat() * 0.1F + 0.9F, false);
 
 					return;
 				}
@@ -167,7 +173,7 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 				{
 					ItemStack result = new ItemStack(block, 1, block.getMetaFromState(state));
 
-					this.onBlockDestroyed(stack, world, block, pos, player);
+					this.onBlockDestroyed(stack, world, state, pos, player);
 					ToolsHelper.spawnAlternateStack(stack, world, pos, result);
 				}
 				else
@@ -195,7 +201,7 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 									else if(stack.getTagCompound().getByte("fortune") == 4)
 										result.stackSize += 1 + world.rand.nextInt(4) / 3;
 
-								this.onBlockDestroyed(stack, world, block, pos, player);
+								this.onBlockDestroyed(stack, world, state, pos, player);
 								ToolsHelper.spawnAlternateStack(stack, world, pos, result);
 
 								return;
@@ -208,7 +214,7 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 							block.quantityDropped(state, stack.getTagCompound().getByte("fortune"), random),
 							block.damageDropped(state));
 
-						this.onBlockDestroyed(stack, world, block, pos, player);
+						this.onBlockDestroyed(stack, world, state, pos, player);
 						ToolsHelper.spawnAlternateStack(stack, world, pos, result);
 
 						return;
@@ -219,7 +225,7 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 						ItemStack result = new ItemStack(block.getItemDropped(state, random, 0),
 							block.quantityDropped(state, 0, random), block.damageDropped(state));
 
-						this.onBlockDestroyed(stack, world, block, pos, player);
+						this.onBlockDestroyed(stack, world, state, pos, player);
 						ToolsHelper.spawnAlternateStack(stack, world, pos, result);
 					}
 				}
@@ -229,7 +235,7 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World world, Block block, BlockPos pos, EntityLivingBase entity)
+	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity)
 	{
 		if(block != null && block.getBlockHardness(world, pos) != 0.0D)
 			stack.damageItem(1, entity);
@@ -237,7 +243,7 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 	}
 
 	@Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
     {
 		if (!world.isRemote)
 			if (player.isSneaking())
@@ -245,24 +251,24 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 						(int) player.posZ);
 			else
 			{
-				RedInventory inv = new RedInventory(player.getHeldItem(), player, 8);
+				RedInventory inv = new RedInventory(player.getHeldItemMainhand(), player, 8);
 				inv.setCharge();
 			}
-        player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
-        return stack;
+		player.setActiveHand(hand);
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
     }
 
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		RedInventory inv = new RedInventory(player.getHeldItem(), player, 8);
+		RedInventory inv = new RedInventory(player.getHeldItemMainhand(), player, 8);
 		return new RedGUI(inv, player);
 	}
 
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		RedInventory inv = new RedInventory(player.getHeldItem(), player, 8);
+		RedInventory inv = new RedInventory(player.getHeldItemMainhand(), player, 8);
 		return new RedContainer(inv, player);
 	}
 }

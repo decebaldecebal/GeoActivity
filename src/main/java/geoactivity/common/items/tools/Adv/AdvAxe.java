@@ -21,11 +21,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class AdvAxe extends BaseGUITool
@@ -183,7 +188,7 @@ public class AdvAxe extends BaseGUITool
 					{
 						if(stack.getTagCompound().getBoolean("nodrops"))
 						{
-							this.onBlockDestroyed(stack, world, block, pos, player);
+							this.onBlockDestroyed(stack, world, blockState, pos, player);
 
 							if(!world.isRemote)
 								world.setBlockToAir(pos);
@@ -192,7 +197,7 @@ public class AdvAxe extends BaseGUITool
 						{
 							ItemStack result = new ItemStack(block, 1, block.getMetaFromState(blockState));
 
-							this.onBlockDestroyed(stack, world, block, pos, player);
+							this.onBlockDestroyed(stack, world, blockState, pos, player);
 							ToolsHelper.spawnStackInWorld(world, pos, result);
 						}
 						else if(stack.getTagCompound().getBoolean("auto-smelt"))
@@ -209,7 +214,7 @@ public class AdvAxe extends BaseGUITool
 								{
 									result.stackSize = block.quantityDropped(blockState, 0, random);
 
-									this.onBlockDestroyed(stack, world, block, pos, player);
+									this.onBlockDestroyed(stack, world, blockState, pos, player);
 									ToolsHelper.spawnStackInWorld(world, pos, result);
 								}
 							}
@@ -220,10 +225,10 @@ public class AdvAxe extends BaseGUITool
 								new ItemStack(block.getItemDropped(blockState, random, 0), block.quantityDropped(
 									blockState, 0, random), block.damageDropped(blockState));
 
-							if(EnchantmentHelper.getEnchantmentLevel(33, stack) > 0)
+							if(EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0)
 								result = new ItemStack(block, 1, block.getMetaFromState(blockState));
 
-							byte fortune = (byte) EnchantmentHelper.getEnchantmentLevel(35, stack);
+							byte fortune = (byte) EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
 
 							if(fortune > 0)
 								result =
@@ -231,7 +236,7 @@ public class AdvAxe extends BaseGUITool
 										block.quantityDropped(blockState, fortune, random),
 										block.damageDropped(blockState));
 
-							this.onBlockDestroyed(stack, world, block, pos, player);
+							this.onBlockDestroyed(stack, world, blockState, pos, player);
 							ToolsHelper.spawnStackInWorld(world, pos, result);
 						}
 					}
@@ -242,7 +247,7 @@ public class AdvAxe extends BaseGUITool
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World world, Block block, BlockPos pos, EntityLivingBase entity)
+	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity)
 	{
 		if(block != null && block.getBlockHardness(world, pos) != 0.0D)
 		{
@@ -252,7 +257,7 @@ public class AdvAxe extends BaseGUITool
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
 	{
 		if(!world.isRemote)
 			if(player.isSneaking())
@@ -263,26 +268,20 @@ public class AdvAxe extends BaseGUITool
 				AdvTInventory inv = new AdvTInventory(player.inventory.getCurrentItem(), player);
 				inv.setCharge();
 			}
-		player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
-		return stack;
+		player.setActiveHand(hand);
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
 	}
 
 	@Override
-	public boolean canHarvestBlock(Block block, ItemStack stack)
+	public boolean canHarvestBlock(IBlockState state, ItemStack stack)
 	{
-		return this.getToolSpeed(stack, block.getDefaultState()) > 1.0F;
+		return this.getToolSpeed(stack, state) > 1.0F;
 	}
 
 	@Override
-	public float getDigSpeed(ItemStack stack, IBlockState state)
+	public float getStrVsBlock(ItemStack stack, IBlockState state)
 	{
 		return this.getToolSpeed(stack, state);
-	}
-
-	@Override
-	public float getStrVsBlock(ItemStack stack, Block block)
-	{
-		return this.getToolSpeed(stack, block.getDefaultState());
 	}
 
 	private float getToolSpeed(ItemStack stack, IBlockState state)
@@ -303,7 +302,7 @@ public class AdvAxe extends BaseGUITool
 			&& block.isToolEffective("axe", state))
 			return eff;
 
-		Material mat = block.getMaterial();
+		Material mat = state.getMaterial();
 		for(Material m : GAMod.axeMaterials)
 			if(m == mat)
 				return eff;
@@ -312,7 +311,7 @@ public class AdvAxe extends BaseGUITool
 	}
 
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
 	{
 		return HashMultimap.create();
 	}
@@ -320,14 +319,14 @@ public class AdvAxe extends BaseGUITool
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		AdvTInventory inv = new AdvTInventory(player.getHeldItem(), player);
+		AdvTInventory inv = new AdvTInventory(player.getHeldItemMainhand(), player);
 		return new AdvTGUI(inv, player);
 	}
 
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		AdvTInventory inv = new AdvTInventory(player.getHeldItem(), player);
+		AdvTInventory inv = new AdvTInventory(player.getHeldItemMainhand(), player);
 		return new AdvTContainer(inv, player);
 	}
 }

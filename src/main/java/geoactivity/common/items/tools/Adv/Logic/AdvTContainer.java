@@ -2,6 +2,7 @@ package geoactivity.common.items.tools.Adv.Logic;
 
 import geoactivity.common.GAMod;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -37,7 +38,7 @@ public class AdvTContainer extends Container
 	@Override
 	public void onContainerClosed(EntityPlayer player)
 	{
-		ItemStack itemStack = player.getCurrentEquippedItem();
+		ItemStack itemStack = player.getHeldItemMainhand();
 		super.onContainerClosed(player);
 		if (!itemStack.hasTagCompound())
 			itemStack.setTagCompound(new NBTTagCompound());
@@ -91,7 +92,7 @@ public class AdvTContainer extends Container
 	}
 
 	@Override
-	public ItemStack slotClick(int slotID, int buttonPressed, int flag, EntityPlayer player)
+	public ItemStack slotClick(int slotID, int buttonPressed, ClickType click, EntityPlayer player)
 	{
 		Slot tmpSlot;
 		if (slotID >= 0 && slotID < inventorySlots.size()) {
@@ -105,6 +106,6 @@ public class AdvTContainer extends Container
 			return tmpSlot.getStack();
 		}
 
-		return super.slotClick(slotID, buttonPressed, flag, player);
+		return super.slotClick(slotID, buttonPressed, click, player);
 	}
 }

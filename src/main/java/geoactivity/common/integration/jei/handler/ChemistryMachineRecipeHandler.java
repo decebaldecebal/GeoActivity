@@ -30,4 +30,10 @@ public class ChemistryMachineRecipeHandler implements IRecipeHandler<ChemistryMa
 	{
 		return recipe.getInputs().size() > 0 && recipe.getOutputs().size() > 0;
 	}
+
+	@Override
+	public String getRecipeCategoryUid(ChemistryMachineRecipeWrapper recipe)
+	{
+		return GeoActivityRecipeCategoryUid.CHEMISTRY_MACHINE;
+	}
 }

@@ -43,4 +43,10 @@ public class CrMShapedRecipeHandler implements IRecipeHandler<CrMShapedRecipe>
 
 		return inputCount > 0;
 	}
+
+	@Override
+	public String getRecipeCategoryUid(CrMShapedRecipe recipe)
+	{
+		return GeoActivityRecipeCategoryUid.CRAFTING_MACHINE;
+	}
 }

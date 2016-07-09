@@ -4,7 +4,7 @@ import java.util.List;
 
 import cofh.api.energy.IEnergyContainerItem;
 import geoactivity.common.lib.ToolsHelper;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class BaseElectricTool extends BaseRedstoneTool implements IEnergyContainerItem
@@ -121,7 +121,7 @@ public abstract class BaseElectricTool extends BaseRedstoneTool implements IEner
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World world, Block block, BlockPos pos, EntityLivingBase entity)
+	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState block, BlockPos pos, EntityLivingBase entity)
 	{
 		if(block != null && block.getBlockHardness(world, pos) != 0.0D)
 		{

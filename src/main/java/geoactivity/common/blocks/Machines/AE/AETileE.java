@@ -9,8 +9,8 @@ import geoactivity.common.util.BaseTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -45,12 +45,12 @@ public class AETileE extends BaseTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbtTag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
 	{
-		super.writeToNBT(nbtTag);
-		nbtTag.setShort("CookTime", (short) furnaceCookTime);
-		nbtTag.setShort("ItemBurnTime", (short) currentItemBurnTime);
-		nbtTag.setByte("upgrades", upgrades);
+		super.writeToNBT(tagCompound);
+		tagCompound.setShort("CookTime", (short) furnaceCookTime);
+		tagCompound.setShort("ItemBurnTime", (short) currentItemBurnTime);
+		tagCompound.setByte("upgrades", upgrades);
 
 		NBTTagCompound nbtTempStack = new NBTTagCompound();
 
@@ -62,7 +62,9 @@ public class AETileE extends BaseTileEntity
 			tempStack.writeToNBT(nbtTempStack);
 		}
 
-		nbtTag.setTag("TempStack", nbtTempStack);
+		tagCompound.setTag("TempStack", nbtTempStack);
+
+		return tagCompound;
 	}
 
 	@SideOnly(Side.CLIENT)

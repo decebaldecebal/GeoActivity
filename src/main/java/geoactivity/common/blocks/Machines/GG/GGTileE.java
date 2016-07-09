@@ -9,14 +9,17 @@ import geoactivity.common.GAMod;
 import geoactivity.common.lib.IOpenableGUI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
-public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, IOpenableGUI
+public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, IOpenableGUI, IInventory
 {
 	public static final int updateAfter = 1200; //one minute 1200
 	private static final int maxDistanceSq = 625; //max 25 blocks away
@@ -45,7 +48,7 @@ public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, I
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 
@@ -54,6 +57,8 @@ public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, I
 		tag.setInteger("lavaBlocks", lavaBlocks);
 		tag.setByte("hightEfficiency", hightEfficiency);
 		tag.setInteger("RFPerTick", RFPerTick);
+
+		return tag;
 	}
 
 	@Override
@@ -119,7 +124,7 @@ public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, I
 
 	private void scanLavaBlocks(BlockPos start)
 	{
-		if(worldObj.getBlockState(start) == Blocks.lava.getDefaultState())
+		if(worldObj.getBlockState(start) == Blocks.LAVA.getDefaultState())
 		{
 			if(this.pos.distanceSq(start) < maxDistanceSq && !blocks.contains(start))
 			{
@@ -156,11 +161,11 @@ public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, I
 				for(int k = -1;k <= 1;k++)
 				{
 					temp = this.pos.add(i, j, k);
-					if(worldObj.getBlockState(temp) == Blocks.lava.getDefaultState())
+					if(worldObj.getBlockState(temp) == Blocks.LAVA.getDefaultState())
 					{
 						if(worldObj.rand.nextInt(100) < chanceToChangeToObsidian)
 						{
-							worldObj.setBlockState(temp, Blocks.obsidian.getDefaultState());
+							worldObj.setBlockState(temp, Blocks.OBSIDIAN.getDefaultState());
 							break;
 						}
 					}
@@ -203,7 +208,7 @@ public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, I
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		return new GGGUI(player.inventory, this);	
+		return new GGGUI(player.inventory, this);
 	}
 
 	@Override
@@ -211,4 +216,96 @@ public class GGTileE extends TileEntity implements ITickable, IEnergyProvider, I
 	{
 		return new GGContainer(this, player.inventory);
 	}
+
+	@Override
+	public String getName()
+	{
+		return null;
+	}
+
+	@Override
+	public boolean hasCustomName()
+	{
+		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName()
+	{
+		return null;
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return 0;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index)
+	{
+		return null;
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count)
+	{
+		return null;
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack)
+	{}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
+		return true;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player)
+	{}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{}
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack)
+	{
+		return false;
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{}
+
+	@Override
+	public int getFieldCount()
+	{
+		return 0;
+	}
+
+	@Override
+	public void clear()
+	{}
 }

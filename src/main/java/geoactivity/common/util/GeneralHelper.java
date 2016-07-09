@@ -81,7 +81,7 @@ public class GeneralHelper
 	{
 		Collection<ItemStack> fuels = new ArrayList<ItemStack>();
 
-		fuels.add(new ItemStack(Blocks.coal_block));
+		fuels.add(new ItemStack(Blocks.COAL_BLOCK));
 		fuels.add(new ItemStack(GAMod.gemLigniteCoal));
 		fuels.add(new ItemStack(GAMod.gemBituminousCoal));
 		fuels.add(new ItemStack(GAMod.gemAnthraciteCoal));
@@ -94,7 +94,7 @@ public class GeneralHelper
 	{
 		Collection<ItemStack> fuels = new ArrayList<ItemStack>();
 
-		fuels.add(new ItemStack(Items.coal));
+		fuels.add(new ItemStack(Items.COAL));
 		fuels.add(new ItemStack(GAMod.gemLigniteCoal));
 		fuels.add(new ItemStack(GAMod.gemBituminousCoal));
 		fuels.add(new ItemStack(GAMod.gemAnthraciteCoal));

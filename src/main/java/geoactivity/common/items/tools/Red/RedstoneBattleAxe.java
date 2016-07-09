@@ -17,10 +17,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class RedstoneBattleAxe extends BaseRedstoneTool
@@ -117,7 +121,7 @@ public class RedstoneBattleAxe extends BaseRedstoneTool
 		IBlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
 
-        if(block != null && block.getBlockHardness(world, pos) > 0.0D)
+        if(block != null && blockState.getBlockHardness(world, pos) > 0.0D)
         {
         	int hlvl = block.getHarvestLevel(blockState);
 
@@ -130,72 +134,68 @@ public class RedstoneBattleAxe extends BaseRedstoneTool
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
-			float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
+		EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!player.canPlayerEdit(pos.offset(side), side, stack))
-			return false;
+			return EnumActionResult.FAIL;
 		else
 		{
 			int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(stack, player, world, pos);
-            if (hook != 0) return hook > 0;
+            if (hook != 0) {
+            	return hook > 0 ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+            }
 
             IBlockState iblockstate = world.getBlockState(pos);
             Block block = iblockstate.getBlock();
 
             if (side != EnumFacing.DOWN && world.isAirBlock(pos.up()))
             {
-            	 if (block == Blocks.grass)
+            	 if (block == Blocks.GRASS)
                  {
-                     return this.useHoe(stack, player, world, pos, Blocks.farmland.getDefaultState());
+                     return this.useHoe(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
                  }
 
-                 if (block == Blocks.dirt)
+                 if (block == Blocks.DIRT)
                  {
                      switch (ARedstoneBattleMiner.SwitchDirtType.TYPE_LOOKUP[iblockstate.getValue(BlockDirt.VARIANT).ordinal()])
                      {
                          case 1:
-                             return this.useHoe(stack, player, world, pos, Blocks.farmland.getDefaultState());
+                             return this.useHoe(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
                          case 2:
-                             return this.useHoe(stack, player, world, pos, Blocks.dirt.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT));
+                             return this.useHoe(stack, player, world, pos, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT));
                      }
                  }
 			}
 
-			return false;
+			return EnumActionResult.FAIL;
 		}
 	}
 
-	protected boolean useHoe(ItemStack stack, EntityPlayer player, World world, BlockPos target, IBlockState newState)
+	protected EnumActionResult useHoe(ItemStack stack, EntityPlayer player, World world, BlockPos target, IBlockState state)
     {
-        world.playSoundEffect(target.getX() + 0.5F, target.getY() + 0.5F, target.getZ() + 0.5F, newState.getBlock().stepSound.getStepSound(), (newState.getBlock().stepSound.getVolume() + 1.0F) / 2.0F, newState.getBlock().stepSound.getFrequency() * 0.8F);
+		world.playSound(target.getX() + 0.5F, target.getY() + 0.5F,
+			target.getZ() + 0.5F, state.getBlock().getSoundType().getStepSound(),
+			SoundCategory.PLAYERS, (state.getBlock().getSoundType().getVolume() + 1.0F) / 2.0F, state.getBlock().getSoundType().getPitch() * 0.8F, false);
 
-        if (world.isRemote)
-            return true;
-        else
-        {
-            world.setBlockState(target, newState);
+        if (!world.isRemote) {
+            world.setBlockState(target, state);
             stack.damageItem(1, player);
-            return true;
         }
+
+        return EnumActionResult.SUCCESS;
     }
 
 	@Override
-    public boolean canHarvestBlock(Block block, ItemStack stack)
-    {
-		return this.getToolSpeed(stack, block.getDefaultState()) > 1.0F;
-    }
-
-	@Override
-	public float getDigSpeed(ItemStack stack, IBlockState state)
-    {
-        return this.getToolSpeed(stack, state);
-    }
-
-	@Override
-	public float getStrVsBlock(ItemStack stack, Block block)
+	public boolean canHarvestBlock(IBlockState state, ItemStack stack)
 	{
-	    return this.getToolSpeed(stack, block.getDefaultState());
+		return this.getToolSpeed(stack, state) > 1.0F;
+	}
+
+	@Override
+	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	{
+		return this.getToolSpeed(stack, state);
 	}
 
 	private float getToolSpeed(ItemStack stack, IBlockState state)
@@ -217,7 +217,7 @@ public class RedstoneBattleAxe extends BaseRedstoneTool
 				&& block.isToolEffective("axe", state))
 			return eff;
 
-		Material mat = block.getMaterial();
+		Material mat = state.getMaterial();
 		for (Material m : GAMod.axeMaterials)
             if (m == mat)
                 return eff;
@@ -226,7 +226,7 @@ public class RedstoneBattleAxe extends BaseRedstoneTool
 	}
 
 	@Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
     {
 		return HashMultimap.create();
     }

@@ -26,8 +26,6 @@ public class MultiItemBlock extends ItemBlock
 			return ;
 		}
 
-		Block block = Block.getBlockFromItem(stack.getItem());
-
 		if(block == GAMod.advancedcoalrefiner)
 			list.add("\u00A77Multiblock: 2x2x2");
 		else if(block == GAMod.advancedorerefiner)

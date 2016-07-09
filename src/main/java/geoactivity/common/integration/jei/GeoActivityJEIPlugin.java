@@ -25,12 +25,10 @@ import geoactivity.common.integration.jei.handler.CrMShapedRecipeHandler;
 import geoactivity.common.integration.jei.handler.CrMShapelessRecipeHandler;
 import geoactivity.common.util.Translator;
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IItemRegistry;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
-import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.item.ItemStack;
@@ -39,14 +37,6 @@ import net.minecraft.item.ItemStack;
 public class GeoActivityJEIPlugin implements IModPlugin
 {
 	public GeoActivityJEIPlugin()
-	{}
-
-	@Override
-	public void onJeiHelpersAvailable(IJeiHelpers jeiHelpers)
-	{}
-
-	@Override
-	public void onItemRegistryAvailable(IItemRegistry itemRegistry)
 	{}
 
 	@Override
@@ -94,10 +84,6 @@ public class GeoActivityJEIPlugin implements IModPlugin
 		registry.addDescription(new ItemStack(GAMod.advancedorerefiner), new String(Translator.translateToLocal("ga.jei.description.advanced_ore_refiner")));
 		registry.addDescription(new ItemStack(GAMod.chemistrymachine), new String(Translator.translateToLocal("ga.jei.description.chemistry_machine")));
 	}
-
-	@Override
-	public void onRecipeRegistryAvailable(IRecipeRegistry recipeRegistry)
-	{}
 
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime)

@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class CRSlot extends Slot
 {
@@ -62,9 +62,9 @@ public class CRSlot extends Slot
 				var2 = 0;
 			else if (var3 < 1.0F)
 			{
-				var4 = MathHelper.floor_float((float)var2 * var3);
+				var4 = MathHelper.floor_float(var2 * var3);
 
-				if (var4 < MathHelper.ceiling_float_int((float)var2 * var3) && Math.random() < (double)((float)var2 * var3 - (float)var4))
+				if (var4 < MathHelper.ceiling_float_int(var2 * var3) && Math.random() < var2 * var3 - var4)
 					++var4;
 
 				var2 = var4;

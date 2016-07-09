@@ -13,6 +13,8 @@ import geoactivity.common.blocks.Machines.GeothermalGenerator;
 import geoactivity.common.blocks.Machines.ThermicGenerator;
 import geoactivity.common.blocks.Machines.ThermicMelter;
 import geoactivity.common.blocks.Machines.ToolCharger;
+import geoactivity.common.itemblocks.BrickItemBlock;
+import geoactivity.common.itemblocks.MultiItemBlock;
 import geoactivity.common.items.ArmorPerks;
 import geoactivity.common.items.AutoStoneBuilder;
 import geoactivity.common.items.BaseItem;
@@ -41,8 +43,9 @@ import geoactivity.common.items.tools.Red.RedstoneMiner;
 import geoactivity.common.lib.IHasName;
 import geoactivity.common.lib.Reference;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -109,48 +112,89 @@ public class GAPreInit
 		/* Armor */
 
 		//Tier I
-		GAMod.reinforcedHelmet = new ReinforcedArmor("reinforcedhelmet", 1, 0);
-		GAMod.reinforcedChest = new ReinforcedArmor("reinforcedchest", 1, 1);
-		GAMod.reinforcedPants = new ReinforcedArmor("reinforcedpants", 2, 2);
-		GAMod.reinforcedBoots = new ReinforcedArmor("reinforcedboots", 1, 3);
+		GAMod.reinforcedHelmet = new ReinforcedArmor("reinforcedhelmet", 1, EntityEquipmentSlot.HEAD);
+		GAMod.reinforcedChest = new ReinforcedArmor("reinforcedchest", 1, EntityEquipmentSlot.CHEST);
+		GAMod.reinforcedPants = new ReinforcedArmor("reinforcedpants", 2, EntityEquipmentSlot.LEGS);
+		GAMod.reinforcedBoots = new ReinforcedArmor("reinforcedboots", 1, EntityEquipmentSlot.FEET);
 
 		//Tier II
-		GAMod.advancedHelmet = new AdvancedArmor("advancedhelmet", 1, 0);
-		GAMod.advancedChest = new AdvancedArmor("advancedchest", 1, 1);
-		GAMod.advancedPants = new AdvancedArmor("advancedpants", 2, 2);
-		GAMod.advancedBoots = new AdvancedArmor("advancedboots", 1, 3);
+		GAMod.advancedHelmet = new AdvancedArmor("advancedhelmet", 1, EntityEquipmentSlot.HEAD);
+		GAMod.advancedChest = new AdvancedArmor("advancedchest", 1, EntityEquipmentSlot.CHEST);
+		GAMod.advancedPants = new AdvancedArmor("advancedpants", 2, EntityEquipmentSlot.LEGS);
+		GAMod.advancedBoots = new AdvancedArmor("advancedboots", 1, EntityEquipmentSlot.FEET);
 	}
 
 	private static void registerBlocks()
 	{
 		//Ores
 		GAMod.oreLignite = new CustomCoalOres("ligniteore", 2).setHardness(3.0F);
+		GAMod.oreLigniteItem = new ItemBlock(GAMod.oreLignite);
+		GameRegistry.register(GAMod.oreLigniteItem.setRegistryName(GAMod.oreLignite.getRegistryName()));
+
 		GAMod.oreBituminous = new CustomCoalOres("bituminousore", 2).setHardness(4.0F);
+		GAMod.oreBituminousItem = new ItemBlock(GAMod.oreBituminous);
+		GameRegistry.register(GAMod.oreBituminousItem.setRegistryName(GAMod.oreBituminous.getRegistryName()));
+
 		GAMod.oreAnthracite = new CustomCoalOres("anthraciteore", 3).setHardness(5.0F);
+		GAMod.oreAnthraciteItem = new ItemBlock(GAMod.oreAnthracite);
+		GameRegistry.register(GAMod.oreAnthraciteItem.setRegistryName(GAMod.oreAnthracite.getRegistryName()));
 
 		//General Blocks
-		GAMod.hardenedglass = new TransparentBlock("hardenedglass", Material.glass, 3).setHardness(20.0F).setResistance(130.0F);
-		GAMod.graphitebase = new TransparentBlock("graphitebase", Material.rock, 2).setHardness(3.0F).setResistance(15.0F);
+		GAMod.hardenedglass = new TransparentBlock("hardenedglass", Material.GLASS, 3).setHardness(20.0F).setResistance(130.0F);
+		GAMod.hardenedglassItem = new ItemBlock(GAMod.hardenedglass);
+		GameRegistry.register(GAMod.hardenedglassItem.setRegistryName(GAMod.hardenedglass.getRegistryName()));
+
+		GAMod.graphitebase = new TransparentBlock("graphitebase", Material.ROCK, 2).setHardness(3.0F).setResistance(15.0F);
+		GAMod.graphitebaseItem = new ItemBlock(GAMod.graphitebase);
+		GameRegistry.register(GAMod.graphitebaseItem.setRegistryName(GAMod.graphitebase.getRegistryName()));
 
 		GAMod.hardenedbrick = new HardenedBrick("hardenedbrick");
+		GAMod.hardenedbrickItem = new BrickItemBlock(GAMod.hardenedbrick);
+		GameRegistry.register(GAMod.hardenedbrickItem.setRegistryName(GAMod.hardenedbrick.getRegistryName()));
 
 		/* Machines */
 
 		//Tier I
 		GAMod.coalrefiner = new CoalRefiner("coalrefiner");
+		GAMod.coalrefinerItem = new ItemBlock(GAMod.coalrefiner);
+		GameRegistry.register(GAMod.coalrefinerItem.setRegistryName(GAMod.coalrefiner.getRegistryName()));
+
 		GAMod.craftingmachine = new CraftingMachine("craftingmachine");
+		GAMod.craftingmachineItem = new ItemBlock(GAMod.craftingmachine);
+		GameRegistry.register(GAMod.craftingmachineItem.setRegistryName(GAMod.craftingmachine.getRegistryName()));
 
 		//Tier II
 		GAMod.atomextractor = new AtomExtractor("atomextractor");
+		GAMod.atomextractorItem = new MultiItemBlock(GAMod.atomextractor);
+		GameRegistry.register(GAMod.atomextractorItem.setRegistryName(GAMod.atomextractor.getRegistryName()));
+
 		GAMod.chemistrymachine = new ChemistryMachine("chemistrymachine");
+		GAMod.chemistrymachineItem = new MultiItemBlock(GAMod.chemistrymachine);
+		GameRegistry.register(GAMod.chemistrymachineItem.setRegistryName(GAMod.chemistrymachine.getRegistryName()));
+
 		GAMod.advancedcoalrefiner = new AdvancedCoalRefiner("advancedcoalrefiner");
+		GAMod.advancedcoalrefinerItem = new MultiItemBlock(GAMod.advancedcoalrefiner);
+		GameRegistry.register(GAMod.advancedcoalrefinerItem.setRegistryName(GAMod.advancedcoalrefiner.getRegistryName()));
+
 		GAMod.advancedorerefiner = new AdvancedOreRefiner("advancedorerefiner");
+		GAMod.advancedorerefinerItem = new MultiItemBlock(GAMod.advancedorerefiner);
+		GameRegistry.register(GAMod.advancedorerefinerItem.setRegistryName(GAMod.advancedorerefiner.getRegistryName()));
 
 		GAMod.thermicgenerator = new ThermicGenerator("thermicgenerator");
-		GAMod.toolcharger = new ToolCharger("toolcharger");
-		GAMod.geothermalgenerator = new GeothermalGenerator("geothermalgenerator");
-		GAMod.thermicmelter = new ThermicMelter("thermicmelter");
+		GAMod.thermicgeneratorItem = new MultiItemBlock(GAMod.thermicgenerator);
+		GameRegistry.register(GAMod.thermicgeneratorItem.setRegistryName(GAMod.thermicgenerator.getRegistryName()));
 
+		GAMod.toolcharger = new ToolCharger("toolcharger");
+		GAMod.toolchargerItem = new MultiItemBlock(GAMod.toolcharger);
+		GameRegistry.register(GAMod.toolchargerItem.setRegistryName(GAMod.toolcharger.getRegistryName()));
+
+		GAMod.geothermalgenerator = new GeothermalGenerator("geothermalgenerator");
+		GAMod.geothermalgeneratorItem = new MultiItemBlock(GAMod.geothermalgenerator);
+		GameRegistry.register(GAMod.geothermalgeneratorItem.setRegistryName(GAMod.geothermalgenerator.getRegistryName()));
+
+		GAMod.thermicmelter = new ThermicMelter("thermicmelter");
+		GAMod.thermicmelterItem = new MultiItemBlock(GAMod.thermicmelter);
+		GameRegistry.register(GAMod.thermicmelterItem.setRegistryName(GAMod.thermicmelter.getRegistryName()));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -178,9 +222,8 @@ public class GAPreInit
 			ModelBakery.registerItemVariants(GAMod.elementContainer,
 				new ResourceLocation(Reference.MOD_ID + ":" + ((IHasName)GAMod.elementContainer).getName(i)));
 
-		Item temp = GameRegistry.findItem(Reference.MOD_ID, ((IHasName)GAMod.hardenedbrick).getName());
 		for(i = 0;i < HardenedBrick.EnumHardenedBrick.values().length;i++)
-			ModelBakery.registerItemVariants(temp,
+			ModelBakery.registerItemVariants(GAMod.hardenedbrickItem,
 				new ResourceLocation(Reference.MOD_ID + ":" + ((IHasName)GAMod.hardenedbrick).getName(i)));
 	}
 }

@@ -13,8 +13,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
@@ -58,14 +61,14 @@ public class AutoStoneBuilder extends BaseItem implements IOpenableGUI
 			tag.setBoolean("canCraft", false);
 			tag.setByte("itemdamage", (byte) 1);
 			tag.setInteger("stackSize", 0);
-			tag.setTag("resultStack", new ItemStack(Blocks.air).writeToNBT(new NBTTagCompound()));
+			tag.setTag("resultStack", new ItemStack(Blocks.AIR).writeToNBT(new NBTTagCompound()));
 			stack.setTagCompound(tag);
 		}
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
-		float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos,
+		EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if(itemStack.hasTagCompound() && !itemStack.getTagCompound().getBoolean("destroyed"))
 		{
@@ -112,7 +115,7 @@ public class AutoStoneBuilder extends BaseItem implements IOpenableGUI
 										ASBInventory inv = new ASBInventory(player.inventory.getCurrentItem(), player);
 										inv.searchItem(player);
 									}
-									return true;
+									return EnumActionResult.SUCCESS;
 								}
 							}
 						}
@@ -124,35 +127,35 @@ public class AutoStoneBuilder extends BaseItem implements IOpenableGUI
 					}
 				}
 		}
-		return false;
+		return EnumActionResult.PASS;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
 	{
 		if(!world.isRemote)
-			if(player.isSneaking())
+			if(player.isSneaking()) {
 				player.openGui(GeoActivity.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-			else if(stack.getItemDamage() > 150)
-			{
+			}
+			else if(stack.getItemDamage() > 150) {
 				ASBInventory inv = new ASBInventory(player.inventory.getCurrentItem(), player);
 				inv.setCharge();
 			}
-		player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
-		return stack;
+		player.setActiveHand(hand);
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
 	}
 
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		ASBInventory inv = new ASBInventory(player.getHeldItem(), player);
+		ASBInventory inv = new ASBInventory(player.getHeldItemMainhand(), player);
 		return new ASBGUI(inv, player);
 	}
 
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		ASBInventory inv = new ASBInventory(player.getHeldItem(), player);
+		ASBInventory inv = new ASBInventory(player.getHeldItemMainhand(), player);
 		return new ASBContainer(inv, player);
 	}
 }

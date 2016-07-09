@@ -14,7 +14,7 @@ public class AdvancedCoalRefinerRecipeHandler implements IRecipeHandler<Advanced
 	}
 
 	@Override
-	public String getRecipeCategoryUid()
+	public String getRecipeCategoryUid(AdvancedCoalRefinerRecipeWrapper recipe)
 	{
 		return GeoActivityRecipeCategoryUid.ADVANCED_COAL_REFINER;
 	}
@@ -29,5 +29,11 @@ public class AdvancedCoalRefinerRecipeHandler implements IRecipeHandler<Advanced
 	public boolean isRecipeValid(AdvancedCoalRefinerRecipeWrapper recipe)
 	{
 		return recipe.getInputs().size() > 0 && recipe.getOutputs().size() > 0;
+	}
+
+	@Override
+	public String getRecipeCategoryUid()
+	{
+		return GeoActivityRecipeCategoryUid.ADVANCED_COAL_REFINER;
 	}
 }

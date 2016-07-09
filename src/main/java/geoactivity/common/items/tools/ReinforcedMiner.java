@@ -12,6 +12,7 @@ import geoactivity.common.items.tools.RMLogic.RMGUI;
 import geoactivity.common.items.tools.RMLogic.RMInventory;
 import geoactivity.common.lib.IHasName;
 import geoactivity.common.lib.IOpenableGUI;
+import geoactivity.common.lib.Reference;
 import geoactivity.common.lib.ToolsHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,10 +21,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -33,12 +38,12 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 
 	public ReinforcedMiner(String name)
 	{
-		super(2, GAMod.ReinforcedMaterial, null);
+		super(2, -2.0f, GAMod.ReinforcedMaterial, null);
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);
 		this.setNoRepair();
-		GameRegistry.registerItem(this, name);
+		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 		this.setHarvestLevel("pickaxe", GAMod.ReinforcedMaterial.getHarvestLevel());
 		this.setHarvestLevel("shovel", GAMod.ReinforcedMaterial.getHarvestLevel());
 	}
@@ -127,7 +132,7 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
 	{
 		if(!world.isRemote)
 			if(player.isSneaking())
@@ -138,28 +143,22 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 				RMInventory inv = new RMInventory(player.inventory.getCurrentItem(), player);
 				inv.setCharge();
 			}
-		return stack;
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
 	}
 
 	@Override
-	public boolean canHarvestBlock(Block block, ItemStack stack)
+	public boolean canHarvestBlock(IBlockState state, ItemStack stack)
 	{
-		return this.getToolSpeed(stack, block.getDefaultState()) > 1.0F;
+		return this.getToolSpeed(state) > 1.0F;
 	}
 
 	@Override
-	public float getDigSpeed(ItemStack stack, IBlockState state)
+	public float getStrVsBlock(ItemStack stack, IBlockState state)
 	{
-		return this.getToolSpeed(stack, state);
+		return this.getToolSpeed(state);
 	}
 
-	@Override
-	public float getStrVsBlock(ItemStack stack, Block block)
-	{
-		return this.getToolSpeed(stack, block.getDefaultState());
-	}
-
-	private float getToolSpeed(ItemStack stack, IBlockState state)
+	private float getToolSpeed(IBlockState state)
 	{
 		Block block = state.getBlock();
 
@@ -168,7 +167,7 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 			|| block.isToolEffective("shovel", state)))
 			return this.efficiencyOnProperMaterial;
 
-		Material mat = block.getMaterial();
+		Material mat = state.getMaterial();
 		for(Material m : GAMod.minerMaterials)
 			if(m == mat)
 				return this.efficiencyOnProperMaterial;
@@ -177,7 +176,7 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 	}
 
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
 	{
 		return HashMultimap.create();
 	}
@@ -185,14 +184,14 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		RMInventory inv = new RMInventory(player.getHeldItem(), player);
+		RMInventory inv = new RMInventory(player.getHeldItemMainhand(), player);
 		return new RMGUI(inv, player);
 	}
 
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		RMInventory inv = new RMInventory(player.getHeldItem(), player);
+		RMInventory inv = new RMInventory(player.getHeldItemMainhand(), player);
 		return new RMContainer(inv, player);
 	}
 }

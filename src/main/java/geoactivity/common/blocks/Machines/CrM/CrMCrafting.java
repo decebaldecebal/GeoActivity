@@ -37,36 +37,36 @@ public class CrMCrafting
 		/* Perks */
 
 		addRecipe(new ItemStack(GAMod.tool_perks, 1, EnumToolPerks.BLANK.getMetadata()), new Object[] {" Z ", "XSX",
-				" Y ", 'X', Items.redstone, 'S', GAMod.carbonfiber, 'Z', Items.glowstone_dust, 'Y', Items.quartz});
+				" Y ", 'X', Items.REDSTONE, 'S', GAMod.carbonfiber, 'Z', Items.GLOWSTONE_DUST, 'Y', Items.QUARTZ});
 
 		//Tool Perks
 		addShapelessRecipe(new ItemStack(GAMod.tool_perks, 1, EnumToolPerks.SPEED.getMetadata()), new Object[] {
-				GAMod.tool_perks, Items.ender_pearl, Items.gold_ingot});
+				GAMod.tool_perks, Items.ENDER_PEARL, Items.GOLD_INGOT});
 		addShapelessRecipe(new ItemStack(GAMod.tool_perks, 1, EnumToolPerks.EFFICIENCY.getMetadata()), new Object[] {
-				GAMod.tool_perks, Items.magma_cream, Items.iron_ingot, Items.iron_ingot});
+				GAMod.tool_perks, Items.MAGMA_CREAM, Items.IRON_INGOT, Items.IRON_INGOT});
 		addShapelessRecipe(new ItemStack(GAMod.tool_perks, 1, EnumToolPerks.DAMAGE.getMetadata()), new Object[] {
-				GAMod.tool_perks, Blocks.redstone_block, Blocks.quartz_block});
+				GAMod.tool_perks, Blocks.REDSTONE_BLOCK, Blocks.QUARTZ_BLOCK});
 		addShapelessRecipe(new ItemStack(GAMod.tool_perks, 1, EnumToolPerks.BYPASSARMOR.getMetadata()), new Object[] {
-				GAMod.tool_perks, Items.diamond, Items.diamond, Items.blaze_rod});
+				GAMod.tool_perks, Items.DIAMOND, Items.DIAMOND, Items.BLAZE_ROD});
 
 		//Machine Perks
 		addShapelessRecipe(new ItemStack(GAMod.machine_perks, 1, EnumMachinePerks.SPEED.getMetadata()), new Object[] {
-				new ItemStack(GAMod.tool_perks, 1, 0), Items.ender_pearl, Items.gold_ingot, Items.gold_ingot,
-				Items.gold_ingot, Items.gold_ingot});
+				new ItemStack(GAMod.tool_perks, 1, 0), Items.ENDER_PEARL, Items.GOLD_INGOT, Items.GOLD_INGOT,
+				Items.GOLD_INGOT, Items.GOLD_INGOT});
 		addShapelessRecipe(new ItemStack(GAMod.machine_perks, 1, EnumMachinePerks.EFFICIENCY.getMetadata()),
-				new Object[] {new ItemStack(GAMod.tool_perks, 1, 0), Items.magma_cream, Blocks.iron_block});
+				new Object[] {new ItemStack(GAMod.tool_perks, 1, 0), Items.MAGMA_CREAM, Blocks.IRON_BLOCK});
 
 		//Armor Perks
 		addShapelessRecipe(new ItemStack(GAMod.armor_perks, 1, EnumArmorPerks.GENERAL.getMetadata()), new Object[] {
-				GAMod.tool_perks, Blocks.obsidian, Items.diamond});
+				GAMod.tool_perks, Blocks.OBSIDIAN, Items.DIAMOND});
 		addShapelessRecipe(new ItemStack(GAMod.armor_perks, 1, EnumArmorPerks.BLAST.getMetadata()), new Object[] {
-				GAMod.tool_perks, Blocks.obsidian, Blocks.obsidian, Items.gold_ingot, Items.gold_ingot});
+				GAMod.tool_perks, Blocks.OBSIDIAN, Blocks.OBSIDIAN, Items.GOLD_INGOT, Items.GOLD_INGOT});
 		addShapelessRecipe(new ItemStack(GAMod.armor_perks, 1, EnumArmorPerks.FIRE.getMetadata()), new Object[] {
-				GAMod.tool_perks, Blocks.netherrack, Items.fire_charge, Items.blaze_rod});
+				GAMod.tool_perks, Blocks.NETHERRACK, Items.FIRE_CHARGE, Items.BLAZE_ROD});
 		addShapelessRecipe(new ItemStack(GAMod.armor_perks, 1, EnumArmorPerks.MAGIC.getMetadata()), new Object[] {
-				GAMod.tool_perks, Items.ghast_tear, Items.magma_cream, Items.fermented_spider_eye});
+				GAMod.tool_perks, Items.GHAST_TEAR, Items.MAGMA_CREAM, Items.FERMENTED_SPIDER_EYE});
 		addShapelessRecipe(new ItemStack(GAMod.armor_perks, 1, EnumArmorPerks.PROJECTILE.getMetadata()), new Object[] {
-				GAMod.tool_perks, Blocks.brick_block, Blocks.brick_block, Items.gold_ingot, Items.gold_ingot});
+				GAMod.tool_perks, Blocks.BRICK_BLOCK, Blocks.BRICK_BLOCK, Items.GOLD_INGOT, Items.GOLD_INGOT});
 
 		/* Tools */
 
@@ -82,13 +82,13 @@ public class CrMCrafting
 
 		//Tier III
 		addRecipe(new ItemStack(GAMod.redstoneMiner, 1, 998), new Object[] {"RYR", " X ", " X ", 'X',
-				GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 1), 'R', Blocks.redstone_block});
+				GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 1), 'R', Blocks.REDSTONE_BLOCK});
 		addRecipe(new ItemStack(GAMod.redstoneBattleAxe, 1, 998), new Object[] {"RYR", "RXR", " X ", 'X',
-				GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 1), 'R', Blocks.redstone_block});
+				GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 1), 'R', Blocks.REDSTONE_BLOCK});
 		addRecipe(new ItemStack(GAMod.redstoneBattleMiner, 1, 1998), new Object[] {"RYR", "RXR", " X ", 'X',
-				GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 2), 'R', Blocks.redstone_block});
+				GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 2), 'R', Blocks.REDSTONE_BLOCK});
 		addRecipe(BaseElectricTool.getUnchargedItem(GAMod.aredstoneBattleMiner), new Object[] {"YYY", "RXR", " X ",
-				'X', GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 2), 'R', Blocks.redstone_block});
+				'X', GAMod.carbonstick, 'Y', new ItemStack(GAMod.preciousAlloy, 1, 2), 'R', Blocks.REDSTONE_BLOCK});
 
 		/* Armor */
 

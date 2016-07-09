@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,11 +20,11 @@ public class ACRContainer extends Container
 	private int lastBurnTime = 0;
 	private int lastItemBurnTime = 0;
 	private byte lastperkEff = 0, lastperkSpeed = 0;
-	
+
 	public ACRContainer(ACRTileE tile, InventoryPlayer playerInv)
 	{
 		tile_entity = tile;
-		
+
 		this.addSlotToContainer(new FuelSlot(tile, 0, 41, 33));
 		this.addSlotToContainer(new Slot(tile, 1, 80, 15));
 		this.addSlotToContainer(new Slot(tile, 2, 80, 50));
@@ -32,7 +32,7 @@ public class ACRContainer extends Container
 		this.addSlotToContainer(new ACRSlot(playerInv.player, tile, 4, 143, 33));
 		this.addSlotToContainer(new PerkSlot(tile, 5, 8, 8));
 		this.addSlotToContainer(new PerkSlot(tile, 6, 8, 28));
-		
+
 		int var3;
 
 		for (var3 = 0; var3 < 3; ++var3)
@@ -42,27 +42,22 @@ public class ACRContainer extends Container
 		for (var3 = 0; var3 < 9; ++var3)
 			this.addSlotToContainer(new Slot(playerInv, var3, 8 + var3 * 18, 142));
 	}
-	
+
 	@Override
-	public void onCraftGuiOpened(ICrafting crafting)
-	{
-		super.onCraftGuiOpened(crafting);
-		
-		crafting.sendProgressBarUpdate(this, 0, tile_entity.furnaceCookTime);
-		crafting.sendProgressBarUpdate(this, 1, tile_entity.furnaceBurnTime);
-		crafting.sendProgressBarUpdate(this, 2, tile_entity.currentItemBurnTime);
-		crafting.sendProgressBarUpdate(this, 3, tile_entity.perkEff);
-		crafting.sendProgressBarUpdate(this, 4, tile_entity.perkSpeed);
-	}
-	
+    public void addListener(IContainerListener listener)
+    {
+        super.addListener(listener);
+        listener.sendAllWindowProperties(this, this.tile_entity);
+    }
+
 	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
 
-		for (int var1 = 0; var1 < crafters.size(); ++var1)
+		for (int var1 = 0; var1 < listeners.size(); ++var1)
 		{
-			ICrafting var2 = (ICrafting) crafters.get(var1);
+			IContainerListener var2 = listeners.get(var1);
 
 			if (lastCookTime != tile_entity.furnaceCookTime)
 				var2.sendProgressBarUpdate(this, 0, tile_entity.furnaceCookTime);
@@ -72,10 +67,10 @@ public class ACRContainer extends Container
 
 			if (lastItemBurnTime != tile_entity.currentItemBurnTime)
 				var2.sendProgressBarUpdate(this, 2, tile_entity.currentItemBurnTime);
-			
+
 			if (lastperkEff != tile_entity.currentItemBurnTime)
 				var2.sendProgressBarUpdate(this, 3, tile_entity.perkEff);
-			
+
 			if (lastperkSpeed != tile_entity.currentItemBurnTime)
 				var2.sendProgressBarUpdate(this, 4, tile_entity.perkSpeed);
 		}
@@ -86,7 +81,7 @@ public class ACRContainer extends Container
 		lastperkEff = tile_entity.perkEff;
 		lastperkSpeed =  tile_entity.perkSpeed;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int par1, int par2)
@@ -99,37 +94,37 @@ public class ACRContainer extends Container
 
 		if (par1 == 2)
 			tile_entity.currentItemBurnTime = par2;
-		
+
 		if (par1 == 3)
 			tile_entity.perkEff = (byte)par2;
-		
+
 		if (par1 == 4)
 			tile_entity.perkSpeed = (byte)par2;
 	}
-	
+
 	@Override
 	public boolean canInteractWith(EntityPlayer par1EntityPlayer)
 	{
 		return tile_entity.isUseableByPlayer(par1EntityPlayer);
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer myPlayer, int toSlot)
 	 {
 		ItemStack tempStack = null;
-		Slot invSlot = (Slot) inventorySlots.get(toSlot);
+		Slot invSlot = inventorySlots.get(toSlot);
 
 		if (invSlot != null && invSlot.getHasStack())
 		{
 			ItemStack tempStack2 = invSlot.getStack();
 			tempStack = tempStack2.copy();
-			
+
 			Item item = tempStack2.getItem();
 
 			if(toSlot >= 7 && toSlot < 34)
 			{
 				if (item == GAMod.gemLigniteCoal || item == GAMod.gemBituminousCoal || item == GAMod.gemAnthraciteCoal
-					 || item == Items.coal)
+					 || item == Items.COAL)
 				{
 					if (!this.mergeItemStack(tempStack2, 0, 1, false))
 					{
@@ -169,7 +164,7 @@ public class ACRContainer extends Container
 				invSlot.putStack((ItemStack) null);
 			else
 				invSlot.onSlotChanged();
-			
+
 			if (tempStack2.stackSize == tempStack.stackSize)
 				return null;
 			invSlot.onPickupFromSlot(myPlayer, tempStack2);

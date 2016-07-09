@@ -1,11 +1,11 @@
 package geoactivity.common.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import geoactivity.common.GeoActivity;
 import geoactivity.common.lib.IHasName;
+import geoactivity.common.lib.Reference;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public abstract class BaseBlock extends Block implements IHasName
 {
@@ -18,17 +18,7 @@ public abstract class BaseBlock extends Block implements IHasName
 		this.setUnlocalizedName(name[0]);
 		this.setHarvestLevel(tool, tier);
 		this.setCreativeTab(GeoActivity.tabMain);
-		GameRegistry.registerBlock(this, name[0]);
-	}
-
-	public <C extends ItemBlock> BaseBlock(Material mat, String tool, int tier, Class<C> item, String... name)
-	{
-		super(mat);
-		this.name = name;
-		this.setUnlocalizedName(name[0]);
-		this.setHarvestLevel(tool, tier);
-		this.setCreativeTab(GeoActivity.tabMain);
-		GameRegistry.registerBlock(this, item, name[0]);
+		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name[0]));
 	}
 
 	@Override

@@ -20,12 +20,12 @@ public class FuelSlot extends Slot
 	{
 		return isFuel(stack);
 	}
-	
+
 	public static boolean isFuel(ItemStack stack)
 	{
 		Item item = stack.getItem();
 		if (item == GAMod.gemLigniteCoal || item == GAMod.gemBituminousCoal || item == GAMod.gemAnthraciteCoal
-				|| item == Items.coal)
+				|| item == Items.COAL)
 			return true;
 		return false;
 	}

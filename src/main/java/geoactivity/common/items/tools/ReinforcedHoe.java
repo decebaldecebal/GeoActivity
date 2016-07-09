@@ -1,10 +1,11 @@
 package geoactivity.common.items.tools;
 
-import net.minecraft.item.ItemHoe;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import geoactivity.common.GAMod;
 import geoactivity.common.GeoActivity;
 import geoactivity.common.lib.IHasName;
+import geoactivity.common.lib.Reference;
+import net.minecraft.item.ItemHoe;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ReinforcedHoe extends ItemHoe implements IHasName
 {
@@ -16,7 +17,7 @@ public class ReinforcedHoe extends ItemHoe implements IHasName
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);
-		GameRegistry.registerItem(this, name);
+		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 	}
 
 	@Override

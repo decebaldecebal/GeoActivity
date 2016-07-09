@@ -19,13 +19,11 @@ import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class CoalRefinerRecipeCategory implements IRecipeCategory
+public class CoalRefinerRecipeCategory implements IRecipeCategory<CoalRefinerRecipeWrapper>
 {
 	@Nonnull
 	protected IDrawable background;
@@ -79,9 +77,8 @@ public class CoalRefinerRecipeCategory implements IRecipeCategory
 		arrow.draw(minecraft, 79, 24);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper)
+	public void setRecipe(IRecipeLayout recipeLayout, CoalRefinerRecipeWrapper wrapper)
 	{
 		recipeLayout.setRecipeTransferButton(140, 50);
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
@@ -90,22 +87,15 @@ public class CoalRefinerRecipeCategory implements IRecipeCategory
 		guiItemStacks.init(1, false, 19, 24);
 		guiItemStacks.init(2, false, 115, 24);
 
-		if (recipeWrapper instanceof CoalRefinerRecipeWrapper)
-		{
-			guiItemStacks.set(1, GeneralHelper.getCoalRefinerFuels());
-			guiItemStacks.set(0, recipeWrapper.getInputs());
-			guiItemStacks.set(2, recipeWrapper.getOutputs());
-		}
-		else
-		{
-			System.out.println("RecipeWrapper is not a known crafting wrapper type: " + recipeWrapper.toString());
-		}
+
+		guiItemStacks.set(1, GeneralHelper.getCoalRefinerFuels());
+		guiItemStacks.set(0, wrapper.getInputs());
+		guiItemStacks.set(2, wrapper.getOutputs());
 	}
 
 	@Nonnull
 	public static List<CoalRefinerRecipeWrapper> getCoalRefinerRecipes(IJeiHelpers helpers)
 	{
-		IStackHelper stackHelper = helpers.getStackHelper();
 		Map<ItemStack, ItemStack> smeltingMap = CRRecipes.getInstance().getSmeltingList();
 
 		List<CoalRefinerRecipeWrapper> recipes = new ArrayList<CoalRefinerRecipeWrapper>();
@@ -117,8 +107,7 @@ public class CoalRefinerRecipeCategory implements IRecipeCategory
 
 			float experience = CRRecipes.getInstance().getExperience(output);
 
-			List<ItemStack> inputs = stackHelper.getSubtypes(input);
-			CoalRefinerRecipeWrapper recipe = new CoalRefinerRecipeWrapper(inputs, output, experience);
+			CoalRefinerRecipeWrapper recipe = new CoalRefinerRecipeWrapper(input, output, experience);
 			recipes.add(recipe);
 		}
 

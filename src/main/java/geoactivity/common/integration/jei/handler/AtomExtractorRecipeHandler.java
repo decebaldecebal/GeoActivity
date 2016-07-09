@@ -30,4 +30,10 @@ public class AtomExtractorRecipeHandler implements IRecipeHandler<AtomExtractorR
 	{
 		return recipe.getInputs().size() > 0 && recipe.getOutputs().size() > 0;
 	}
+
+	@Override
+	public String getRecipeCategoryUid(AtomExtractorRecipeWrapper recipe)
+	{
+		return GeoActivityRecipeCategoryUid.ATOM_EXTRACTOR;
+	}
 }

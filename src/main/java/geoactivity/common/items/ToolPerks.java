@@ -9,9 +9,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -137,8 +140,8 @@ public class ToolPerks extends BaseItem
     }
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side,
-			float par8, float par9, float par10)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
+		EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
 		if(stack.getMetadata() == EnumToolPerks.DROPTP.getMetadata() && player.isSneaking())
 		{
@@ -154,21 +157,21 @@ public class ToolPerks extends BaseItem
 					stack.setTagCompound(tag);
 
 					if(!world.isRemote)
-						player.addChatMessage(new ChatComponentTranslation("ga.perks.droptp"));
+						player.addChatMessage(new TextComponentTranslation("ga.perks.droptp"));
 				}
 			}
 		}
-		return false;
+		return EnumActionResult.PASS;
     }
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
     {
 		if(stack.getMetadata() == EnumToolPerks.DROPTP.getMetadata() && !player.isSneaking()
 				&& stack.hasTagCompound() && stack.getTagCompound().getIntArray("coords").length > 0)
 			stack.setTagCompound(null);
 
-		return stack;
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
     }
 
 	public static enum EnumToolPerks

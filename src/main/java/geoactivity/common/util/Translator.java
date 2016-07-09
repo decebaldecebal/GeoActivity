@@ -4,25 +4,26 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
-import net.minecraft.util.StatCollector;
+
+import net.minecraft.util.text.translation.I18n;
 
 public class Translator
 {
 	public static String translateToLocal(String key) {
-		if (StatCollector.canTranslate(key)) {
-			return StatCollector.translateToLocal(key);
+		if (I18n.canTranslate(key)) {
+			return I18n.translateToLocal(key);
 		} else {
-			return StatCollector.translateToFallback(key);
+			return I18n.translateToFallback(key);
 		}
 	}
-	
+
 	public static List<String> getWrappedTranslation(String key)
 	{
 		String trans = translateToLocal(key);
-		
-		return Arrays.asList(wrap(trans, 40)); 
+
+		return Arrays.asList(wrap(trans, 40));
 	}
-	
+
 	@SuppressWarnings("all")
 	public static String[] wrap(String input, int len)
 	{

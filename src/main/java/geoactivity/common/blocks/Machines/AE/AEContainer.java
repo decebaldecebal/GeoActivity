@@ -5,7 +5,7 @@ import geoactivity.common.items.ElementContainer.EnumElements;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,13 +13,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AEContainer extends Container
 {
-	protected AETileE Tile_E;
+	protected AETileE tile_entity;
 	private int lastCookTime = 0;
 	private int lastBurnTime = 0;
 
 	public AEContainer(AETileE tile, InventoryPlayer playerInv)
 	{
-		Tile_E = tile;
+		tile_entity = tile;
 
 		this.addSlotToContainer(new Slot(tile, 0, 22, 30));
 		this.addSlotToContainer(new ECSlot(tile, 1, 50, 55));
@@ -38,32 +38,30 @@ public class AEContainer extends Container
 	}
 
 	@Override
-	public void onCraftGuiOpened(ICrafting crafting)
-	{
-		super.onCraftGuiOpened(crafting);
-
-		crafting.sendProgressBarUpdate(this, 0, Tile_E.furnaceCookTime);
-		crafting.sendProgressBarUpdate(this, 1, Tile_E.currentItemBurnTime);
-	}
+    public void addListener(IContainerListener listener)
+    {
+        super.addListener(listener);
+        listener.sendAllWindowProperties(this, this.tile_entity);
+    }
 
 	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
 
-		for (int var1 = 0; var1 < crafters.size(); ++var1)
+		for (int var1 = 0; var1 < listeners.size(); ++var1)
 		{
-			ICrafting var2 = crafters.get(var1);
+			IContainerListener var2 = listeners.get(var1);
 
-			if (lastCookTime != Tile_E.furnaceCookTime)
-				var2.sendProgressBarUpdate(this, 0, Tile_E.furnaceCookTime);
+			if (lastCookTime != tile_entity.furnaceCookTime)
+				var2.sendProgressBarUpdate(this, 0, tile_entity.furnaceCookTime);
 
-			if (lastBurnTime != Tile_E.currentItemBurnTime)
-				var2.sendProgressBarUpdate(this, 1, Tile_E.currentItemBurnTime);
+			if (lastBurnTime != tile_entity.currentItemBurnTime)
+				var2.sendProgressBarUpdate(this, 1, tile_entity.currentItemBurnTime);
 		}
 
-		lastCookTime = Tile_E.furnaceCookTime;
-		lastBurnTime = Tile_E.currentItemBurnTime;
+		lastCookTime = tile_entity.furnaceCookTime;
+		lastBurnTime = tile_entity.currentItemBurnTime;
 	}
 
 	@Override
@@ -71,15 +69,15 @@ public class AEContainer extends Container
 	public void updateProgressBar(int par1, int par2)
 	{
 		if (par1 == 0)
-			Tile_E.furnaceCookTime = par2;
+			tile_entity.furnaceCookTime = par2;
 		else if(par1 == 1)
-			Tile_E.currentItemBurnTime = par2;
+			tile_entity.currentItemBurnTime = par2;
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return Tile_E.isUseableByPlayer(player);
+		return tile_entity.isUseableByPlayer(player);
 	}
 
 	@Override

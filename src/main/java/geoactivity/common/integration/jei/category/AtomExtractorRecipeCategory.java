@@ -19,12 +19,11 @@ import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class AtomExtractorRecipeCategory implements IRecipeCategory
+public class AtomExtractorRecipeCategory implements IRecipeCategory<AtomExtractorRecipeWrapper>
 {
 	@Nonnull
 	protected IDrawable background;
@@ -73,7 +72,7 @@ public class AtomExtractorRecipeCategory implements IRecipeCategory
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper)
+	public void setRecipe(IRecipeLayout recipeLayout, AtomExtractorRecipeWrapper wrapper)
 	{
 		recipeLayout.setRecipeTransferButton(140, 50);
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
@@ -84,23 +83,14 @@ public class AtomExtractorRecipeCategory implements IRecipeCategory
 		guiItemStacks.init(3, false, 101, 19);
 		guiItemStacks.init(4, false, 127, 19);
 
-		if (recipeWrapper instanceof AtomExtractorRecipeWrapper)
-		{
-			AtomExtractorRecipeWrapper wrapper = (AtomExtractorRecipeWrapper) recipeWrapper;
+		ItemStack[] outputElemens = wrapper.getOutputElements();
 
-			ItemStack[] outputElemens = wrapper.getOutputElements();
+		guiItemStacks.set(0, wrapper.getInputStack());
+		guiItemStacks.set(2, outputElemens[0]);
+		guiItemStacks.set(3, outputElemens[1]);
+		guiItemStacks.set(4, outputElemens[2]);
 
-			guiItemStacks.set(0, wrapper.getInputStack());
-			guiItemStacks.set(2, outputElemens[0]);
-			guiItemStacks.set(3, outputElemens[1]);
-			guiItemStacks.set(4, outputElemens[2]);
-
-			guiItemStacks.set(1, new ItemStack(GAMod.elementContainer, wrapper.getElementContainerNumber()));
-		}
-		else
-		{
-			System.out.println("RecipeWrapper is not a known crafting wrapper type: " + recipeWrapper.toString());
-		}
+		guiItemStacks.set(1, new ItemStack(GAMod.elementContainer, wrapper.getElementContainerNumber()));
 	}
 
 	@Nonnull

@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class ASBInventory implements IInventory
@@ -29,7 +29,7 @@ public class ASBInventory implements IInventory
 			tag.setBoolean("canCraft", false);
 			tag.setByte("itemdamage", (byte) 1);
 			tag.setInteger("stackSize", 0);
-			tag.setTag("resultStack", new ItemStack(Blocks.air).writeToNBT(new NBTTagCompound()));
+			tag.setTag("resultStack", new ItemStack(Blocks.AIR).writeToNBT(new NBTTagCompound()));
 			stack.setTagCompound(tag);
 		}
 		myInventory = new ItemStack[3];
@@ -107,7 +107,7 @@ public class ASBInventory implements IInventory
 
 	public void searchItem(EntityPlayer player)
 	{
-		current = player.getCurrentEquippedItem();
+		current = player.getHeldItemMainhand();
 		if(myInventory[1] != null && myInventory[2] != null)
 		{
 			ItemStack result = FurnaceRecipes.instance().getSmeltingResult(myInventory[1]);
@@ -321,7 +321,7 @@ public class ASBInventory implements IInventory
 	}
 
 	@Override
-	public IChatComponent getDisplayName()
+	public ITextComponent getDisplayName()
 	{
 		return null;
 	}

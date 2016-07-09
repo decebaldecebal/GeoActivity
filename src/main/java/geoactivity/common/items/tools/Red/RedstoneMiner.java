@@ -11,10 +11,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class RedstoneMiner extends BaseRedstoneTool
@@ -39,7 +40,7 @@ public class RedstoneMiner extends BaseRedstoneTool
 
 		if(stack.getTagCompound().getBoolean("widerRadius"))
 		{
-			MovingObjectPosition mop = ToolsHelper.raytraceFromEntity(world, player, true, 5.0D);
+			RayTraceResult mop = ToolsHelper.raytraceFromEntity(world, player, true, 5.0D);
 	        if (mop == null)
 	            return super.onBlockStartBreak(stack, pos, player);
 
@@ -140,7 +141,7 @@ public class RedstoneMiner extends BaseRedstoneTool
 		IBlockState blockState = world.getBlockState(pos);
 		Block block = blockState.getBlock();
 
-        if(block != null && block.getBlockHardness(world, pos) > 0.0D)
+        if(block != null && blockState.getBlockHardness(world, pos) > 0.0D)
         {
         	int hlvl = block.getHarvestLevel(blockState);
 
@@ -152,21 +153,15 @@ public class RedstoneMiner extends BaseRedstoneTool
 	}
 
 	@Override
-    public boolean canHarvestBlock(Block block, ItemStack stack)
-    {
-		return this.getToolSpeed(stack, block.getDefaultState()) > 1.0F;
-    }
-
-	@Override
-	public float getDigSpeed(ItemStack stack, IBlockState state)
-    {
-        return this.getToolSpeed(stack, state);
-    }
-
-	@Override
-	public float getStrVsBlock(ItemStack stack, Block block)
+	public boolean canHarvestBlock(IBlockState state, ItemStack stack)
 	{
-	    return this.getToolSpeed(stack, block.getDefaultState());
+		return this.getToolSpeed(stack, state) > 1.0F;
+	}
+
+	@Override
+	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	{
+		return this.getToolSpeed(stack, state);
 	}
 
 	private float getToolSpeed(ItemStack stack, IBlockState state)
@@ -189,7 +184,7 @@ public class RedstoneMiner extends BaseRedstoneTool
 						|| block.isToolEffective("shovel", state)))
 			return eff;
 
-		Material mat = block.getMaterial();
+		Material mat = state.getMaterial();
 		for (Material m : GAMod.minerMaterials)
             if (m == mat)
                 return eff;
@@ -198,7 +193,7 @@ public class RedstoneMiner extends BaseRedstoneTool
 	}
 
 	@Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(ItemStack stack)
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
     {
 		return HashMultimap.create();
     }
