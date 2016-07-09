@@ -1,7 +1,9 @@
 Version 2.3.1:
 Changes:
-- BETA VERSION, except minor bugs
 - update to MC 1.9.4 and Forge 1.9.4-12.17.0.1976
+Fixes:
+- fixed item models not being displayed properly
+- fixed various other small bugs
 
 Version 2.3:
 Changes:

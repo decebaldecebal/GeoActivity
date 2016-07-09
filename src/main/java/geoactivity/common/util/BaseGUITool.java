@@ -18,7 +18,7 @@ public abstract class BaseGUITool extends ItemTool implements IHasName, IOpenabl
 
 	public BaseGUITool(String name, ToolMaterial material)
 	{
-		super(0, -1.0f, material, null);
+		super(0, -4.0f, material, null);
 
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(false);
