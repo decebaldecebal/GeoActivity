@@ -14,7 +14,7 @@ public class GAMod
 {
 	// Materials
 	public static Item.ToolMaterial ReinforcedMaterial = EnumHelper.addToolMaterial("Reinforced", 2, 500, 8.0F, 3.0F, 18);
-	public static Item.ToolMaterial AdvancedMaterial = EnumHelper.addToolMaterial("Advanced", 3, 1000, 10.0F, 0.0F, 8);
+	public static Item.ToolMaterial AdvancedMaterial = EnumHelper.addToolMaterial("Advanced", 3, 1000, 10.0F, 5.0F, 8);
 
 	public static ItemArmor.ArmorMaterial ReinforcedArmorMaterial = EnumHelper.addArmorMaterial("ReinforcedArmor",
 			"geoactivity:reinforced", 30, new int[]{ 2, 6, 5, 2 }, 18, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);

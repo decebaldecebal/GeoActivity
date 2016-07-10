@@ -1,7 +1,6 @@
 package geoactivity.common.items.tools.Red;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import java.util.Set;
 
 import geoactivity.common.GAMod;
 import geoactivity.common.lib.ToolsHelper;
@@ -9,9 +8,7 @@ import geoactivity.common.util.BaseRedstoneTool;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -192,9 +189,9 @@ public class RedstoneMiner extends BaseRedstoneTool
 		return 1.0F;
 	}
 
-	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
+    @Override
+    public Set<String> getToolClasses(ItemStack stack)
     {
-		return HashMultimap.create();
+        return com.google.common.collect.ImmutableSet.of("pickaxe", "shovel");
     }
 }

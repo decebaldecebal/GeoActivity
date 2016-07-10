@@ -16,9 +16,9 @@ public abstract class BaseGUITool extends ItemTool implements IHasName, IOpenabl
 	protected static Random random = new Random();
 	private String name;
 
-	public BaseGUITool(String name, ToolMaterial material)
+	public BaseGUITool(String name, ToolMaterial material, float attackDamageIn)
 	{
-		super(0, -4.0f, material, null);
+		super(attackDamageIn, -3.0f, material, null);
 
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(false);
@@ -41,17 +41,14 @@ public abstract class BaseGUITool extends ItemTool implements IHasName, IOpenabl
 		return false;
 	}
 
-	public static void addDamageInfo(ItemStack stack, int baseDamage, List<String> list)
+	public static void addDamageInfo(ItemStack stack, float baseDamage, List<String> list)
 	{
 		if(stack.hasTagCompound() && stack.getTagCompound().getByte("damage") >= 1)
 			baseDamage += stack.getTagCompound().getByte("damage");
 
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("barmor"))
 		{
-			list.add("\u00A79+" + (baseDamage - baseDamage / 3) + " Attack Damage");
 			list.add("\u00A79+" + baseDamage / 3 + " Armor Bypass Damage");
 		}
-		else
-			list.add("\u00A79+" + baseDamage + " Attack Damage");
 	}
 }

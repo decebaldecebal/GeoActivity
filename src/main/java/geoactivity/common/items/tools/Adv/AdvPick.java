@@ -1,6 +1,7 @@
 package geoactivity.common.items.tools.Adv;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -17,8 +18,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
@@ -39,7 +40,7 @@ public class AdvPick extends BaseGUITool
 {
 	public AdvPick(String name)
 	{
-		super(name, GAMod.AdvancedMaterial);
+		super(name, GAMod.AdvancedMaterial, 1.0f);
 
 		this.setHarvestLevel("pickaxe", GAMod.AdvancedMaterial.getHarvestLevel());
 	}
@@ -81,7 +82,7 @@ public class AdvPick extends BaseGUITool
 		}
 		list.add("");
 
-		addDamageInfo(stack, 6, list);
+		addDamageInfo(stack, this.damageVsEntity, list);
 	}
 
 	@Override
@@ -100,22 +101,6 @@ public class AdvPick extends BaseGUITool
 			return false;
 		stack.damageItem(2, entityBase);
 		return true;
-	}
-
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-	{
-		if(!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		if(this.getDamage(stack) >= 998 && player.capabilities.isCreativeMode == false)
-		{
-			NBTTagCompound tag = stack.getTagCompound();
-			tag.setBoolean("destroyed", true);
-			stack.setTagCompound(tag);
-		}
-		if(stack.getTagCompound().getBoolean("destroyed"))
-			return false;
-		return ToolsHelper.onLeftClickEntity(stack, player, entity, 6);
 	}
 
 	@Override
@@ -405,11 +390,29 @@ public class AdvPick extends BaseGUITool
 		return 1.0F;
 	}
 
-	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
-	{
-		return HashMultimap.create();
-	}
+    @Override
+    public Set<String> getToolClasses(ItemStack stack)
+    {
+        return com.google.common.collect.ImmutableSet.of("pickaxe");
+    }
+
+    @Override
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
+    {
+        Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
+
+        if (slot == EntityEquipmentSlot.MAINHAND)
+        {
+        	NBTTagCompound tag = stack.getTagCompound();
+        	if(tag == null || !stack.getTagCompound().getBoolean("destroyed")) {
+        		float damage = this.damageVsEntity + (tag != null ? tag.getByte("damage") : 0);
+        		multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", damage, 0));
+        		multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", this.attackSpeed, 0));
+        	}
+        }
+
+        return multimap;
+    }
 
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)

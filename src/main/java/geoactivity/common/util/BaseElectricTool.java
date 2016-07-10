@@ -3,10 +3,8 @@ package geoactivity.common.util;
 import java.util.List;
 
 import cofh.api.energy.IEnergyContainerItem;
-import geoactivity.common.lib.ToolsHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -106,18 +104,6 @@ public abstract class BaseElectricTool extends BaseRedstoneTool implements IEner
 
 		this.setEnergy(stack, this.getEnergyStored(stack) - energyPerUse);
 		return true;
-	}
-
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-	{
-		if(!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-
-		if(!isToolUsable(stack, player))
-			return false;
-
-		return ToolsHelper.onLeftClickEntity(stack, player, entity, this.damage);
 	}
 
 	@Override

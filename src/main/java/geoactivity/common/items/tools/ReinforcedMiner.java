@@ -1,6 +1,7 @@
 package geoactivity.common.items.tools;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -13,12 +14,11 @@ import geoactivity.common.items.tools.RMLogic.RMInventory;
 import geoactivity.common.lib.IHasName;
 import geoactivity.common.lib.IOpenableGUI;
 import geoactivity.common.lib.Reference;
-import geoactivity.common.lib.ToolsHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -38,14 +38,14 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 
 	public ReinforcedMiner(String name)
 	{
-		super(2, -2.0f, GAMod.ReinforcedMaterial, null);
+		super(2, -3.0f, GAMod.ReinforcedMaterial, null);
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);
 		this.setNoRepair();
-		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 		this.setHarvestLevel("pickaxe", GAMod.ReinforcedMaterial.getHarvestLevel());
 		this.setHarvestLevel("shovel", GAMod.ReinforcedMaterial.getHarvestLevel());
+		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 	}
 
 	@Override
@@ -75,8 +75,6 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 	{
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("destroyed"))
 			list.add("\u00A7cDestroyed");
-		list.add("");
-		list.add("\u00A79+4 Attack Damage");
 	}
 
 	@Override
@@ -95,22 +93,6 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 			return false;
 		stack.damageItem(2, entityBase);
 		return true;
-	}
-
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-	{
-		if(!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		if(this.getDamage(stack) >= 498 && player.capabilities.isCreativeMode == false)
-		{
-			NBTTagCompound tag = stack.getTagCompound();
-			tag.setBoolean("destroyed", true);
-			stack.setTagCompound(tag);
-		}
-		if(stack.getTagCompound().getBoolean("destroyed"))
-			return false;
-		return ToolsHelper.onLeftClickEntity(stack, player, entity, 4);
 	}
 
 	@Override
@@ -175,11 +157,27 @@ public class ReinforcedMiner extends ItemTool implements IHasName, IOpenableGUI
 		return 1.0F;
 	}
 
-	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
-	{
-		return HashMultimap.create();
-	}
+    @Override
+    public Set<String> getToolClasses(ItemStack stack)
+    {
+        return com.google.common.collect.ImmutableSet.of("pickaxe", "axe");
+    }
+
+    @Override
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
+    {
+        Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
+
+        if (slot == EntityEquipmentSlot.MAINHAND)
+        {
+        	if(stack.getTagCompound() == null || !stack.getTagCompound().getBoolean("destroyed")) {
+        		multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", this.damageVsEntity, 0));
+        		multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", this.attackSpeed, 0));
+        	}
+        }
+
+        return multimap;
+    }
 
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)

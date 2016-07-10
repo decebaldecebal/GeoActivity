@@ -2,6 +2,9 @@ package geoactivity.common.util;
 
 import java.util.List;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 import geoactivity.common.GeoActivity;
 import geoactivity.common.items.tools.Red.Logic.RedContainer;
 import geoactivity.common.items.tools.Red.Logic.RedGUI;
@@ -9,10 +12,12 @@ import geoactivity.common.items.tools.Red.Logic.RedInventory;
 import geoactivity.common.lib.ToolsHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -31,7 +36,7 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 
 	public BaseRedstoneTool(String name, ToolMaterial material, int durability, int damage)
 	{
-		super(name, material);
+		super(name, material, 0.0f);
 
 		this.durability = durability;
 		this.damage = damage;
@@ -113,18 +118,6 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 
 		stack.damageItem(1, entityBase);
 		return true;
-	}
-
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-	{
-		if(!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-
-		if(!isToolUsable(stack, player))
-			return false;
-
-		return ToolsHelper.onLeftClickEntity(stack, player, entity, this.damage);
 	}
 
 	protected void breakTree(World world, ItemStack stack, BlockPos pos, EntityPlayer player)
@@ -271,4 +264,22 @@ public abstract class BaseRedstoneTool extends BaseGUITool
 		RedInventory inv = new RedInventory(player.getHeldItemMainhand(), player, 8);
 		return new RedContainer(inv, player);
 	}
+
+    @Override
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
+    {
+        Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
+
+        if (slot == EntityEquipmentSlot.MAINHAND)
+        {
+        	NBTTagCompound tag = stack.getTagCompound();
+        	if(tag == null || !stack.getTagCompound().getBoolean("destroyed")) {
+        		float damage = this.damage + (tag != null ? tag.getByte("damage") : 0);
+        		multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", damage, 0));
+        		multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", this.attackSpeed, 0));
+        	}
+        }
+
+        return multimap;
+    }
 }

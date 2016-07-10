@@ -13,11 +13,10 @@ import geoactivity.common.items.tools.Adv.Logic.AdvTInventory;
 import geoactivity.common.lib.IHasName;
 import geoactivity.common.lib.IOpenableGUI;
 import geoactivity.common.lib.Reference;
-import geoactivity.common.lib.ToolsHelper;
 import geoactivity.common.util.BaseRedstoneTool;
 import geoactivity.common.util.GeneralHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -34,6 +33,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 {
 	private String name;
+	protected float damageVsEntity;
+	protected float attackSpeed;
 
 	public AdvSword(String name)
 	{
@@ -42,6 +43,8 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);
+		this.damageVsEntity = 3.0f + GAMod.AdvancedMaterial.getDamageVsEntity();
+		this.attackSpeed = -2.4f;
 		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 	}
 
@@ -86,7 +89,7 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 		}
 		list.add("");
 
-		BaseRedstoneTool.addDamageInfo(stack, 8, list);
+		BaseRedstoneTool.addDamageInfo(stack, this.damageVsEntity, list);
 	}
 
 	@Override
@@ -108,22 +111,6 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 				player.addExperience(1);
 		stack.damageItem(1, entityBase);
 		return true;
-	}
-
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-	{
-		if(!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		if(this.getDamage(stack) >= 998 && player.capabilities.isCreativeMode == false)
-		{
-			NBTTagCompound tag = stack.getTagCompound();
-			tag.setBoolean("destroyed", true);
-			stack.setTagCompound(tag);
-		}
-		if(stack.getTagCompound().getBoolean("destroyed"))
-			return false;
-		return ToolsHelper.onLeftClickEntity(stack, player, entity, 8);
 	}
 
 	@Override
@@ -161,11 +148,23 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 		return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
 	}
 
-	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
-	{
-		return HashMultimap.create();
-	}
+    @Override
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
+    {
+        Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
+
+        if (slot == EntityEquipmentSlot.MAINHAND)
+        {
+        	NBTTagCompound tag = stack.getTagCompound();
+        	if(tag == null || !stack.getTagCompound().getBoolean("destroyed")) {
+        		float damage = this.damageVsEntity + (tag != null ? tag.getByte("damage") : 0);
+        		multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", damage, 0));
+        		multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", this.attackSpeed, 0));
+        	}
+        }
+
+        return multimap;
+    }
 
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)

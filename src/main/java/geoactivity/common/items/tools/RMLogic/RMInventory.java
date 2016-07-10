@@ -1,14 +1,22 @@
 package geoactivity.common.items.tools.RMLogic;
 
+import java.util.UUID;
+
+import geoactivity.common.GAMod;
+import geoactivity.common.util.BaseInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import geoactivity.common.GAMod;
-import geoactivity.common.util.BaseInventory;
 
 public class RMInventory extends BaseInventory
 {
+	protected static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
+	protected static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
+
+	protected float damageVsEntity;
+	protected float attackSpeed;
+
 	public RMInventory(ItemStack stack, EntityPlayer player)
 	{
 		super(stack, player, 1);
