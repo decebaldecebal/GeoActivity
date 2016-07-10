@@ -38,7 +38,7 @@ public class AdvAxe extends BaseGUITool
 {
 	public AdvAxe(String name)
 	{
-		super(name, GAMod.AdvancedMaterial, 2.0f);
+		super(name, GAMod.AdvancedMaterial, 1.0f);
 
 		this.setHarvestLevel("axe", GAMod.AdvancedMaterial.getHarvestLevel());
 	}

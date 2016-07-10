@@ -1,11 +1,12 @@
 package geoactivity.common.blocks.Machines;
 
 import geoactivity.common.blocks.Machines.Tiles.TGTileE;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class ThermicGenerator extends BaseContainerBlock
@@ -25,9 +26,11 @@ public class ThermicGenerator extends BaseContainerBlock
 	}
 
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn)
 	{
-		TGTileE tile = (TGTileE) world.getTileEntity(pos);
-		tile.checkBricks();
+		if (!world.isRemote) {
+			TGTileE tile = (TGTileE) world.getTileEntity(pos);
+			tile.checkBricks();
+		}
 	}
 }
