@@ -40,7 +40,7 @@ public class AdvPick extends BaseGUITool
 {
 	public AdvPick(String name)
 	{
-		super(name, GAMod.AdvancedMaterial, 1.0f);
+		super(name, GAMod.AdvancedMaterial, 0.0f);
 
 		this.setHarvestLevel("pickaxe", GAMod.AdvancedMaterial.getHarvestLevel());
 	}

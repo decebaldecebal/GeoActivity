@@ -1,6 +1,13 @@
-Version 2.3.2:
+Version 2.4:
 Changes:
 - update to MC 1.10.2 and Forge 1.10.2-12.18.0.2010
+
+Version 2.3.2:
+Fixes:
+- fix tools not dealing damange properly
+- fix tools not using attack speed properly
+- fix tools not mining blocks properly
+- fix atom extractor and thermic generator not being updated properly
 
 Version 2.3.1:
 Changes:

@@ -43,7 +43,7 @@ public class AdvSword extends ItemSword implements IHasName, IOpenableGUI
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);
-		this.damageVsEntity = 3.0f + GAMod.AdvancedMaterial.getDamageVsEntity();
+		this.damageVsEntity = 2.0f + GAMod.AdvancedMaterial.getDamageVsEntity();
 		this.attackSpeed = -2.4f;
 		GameRegistry.register(this.setRegistryName(Reference.MOD_ID, name));
 	}

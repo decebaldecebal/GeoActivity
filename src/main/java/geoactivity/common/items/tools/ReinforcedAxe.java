@@ -16,7 +16,7 @@ public class ReinforcedAxe extends ItemAxe implements IHasName
 
 	public ReinforcedAxe(String name)
 	{
-		super(GAMod.ReinforcedMaterial, 5.0f + GAMod.ReinforcedMaterial.getDamageVsEntity(), -3.1f);
+		super(GAMod.ReinforcedMaterial, 2.0f + GAMod.ReinforcedMaterial.getDamageVsEntity(), -3.1f);
 		this.name = name;
 		this.setUnlocalizedName(name);
 		this.setCreativeTab(GeoActivity.tabMain);

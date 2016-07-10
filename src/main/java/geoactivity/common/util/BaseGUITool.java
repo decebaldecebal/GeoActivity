@@ -48,7 +48,7 @@ public abstract class BaseGUITool extends ItemTool implements IHasName, IOpenabl
 
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("barmor"))
 		{
-			list.add("\u00A79+" + baseDamage / 3 + " Armor Bypass Damage");
+			list.add("\u00A79" + baseDamage / 3 + " Armor Bypass Damage");
 		}
 	}
 }

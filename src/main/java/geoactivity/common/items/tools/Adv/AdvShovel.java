@@ -39,7 +39,7 @@ public class AdvShovel extends BaseGUITool
 {
 	public AdvShovel(String name)
 	{
-		super(name, GAMod.AdvancedMaterial, 0.0f);
+		super(name, GAMod.AdvancedMaterial, 0.5f);
 
 		this.setHarvestLevel("shovel", GAMod.AdvancedMaterial.getHarvestLevel());
 	}
