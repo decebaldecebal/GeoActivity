@@ -1,3 +1,7 @@
+Version 2.3.2:
+Changes:
+- update to MC 1.10.2 and Forge 1.10.2-12.18.0.2010
+
 Version 2.3.1:
 Changes:
 - update to MC 1.9.4 and Forge 1.9.4-12.17.0.1976
